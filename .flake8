@@ -1,0 +1,21 @@
+[flake8]
+
+exclude =
+  .pytest_cache
+  .DS_Store
+  __pycache__
+  **/**/__pycache__
+  *.pyc
+  .git
+  setup.py
+  build
+  dist
+  releases
+  .venv
+  .tox
+  .vscode
+  .github
+  tests/fixtures/
+  tests/utils/fixtures/
+
+max-complexity = 10

@@ -1,0 +1,10 @@
+# FILES
+**/**/.pyc
+.DS_Store
+README
+
+# DIRECTORIES
+**/**/__pycache__
+.vscode/
+.pytest_cache
+src.egg-info
