@@ -29,8 +29,6 @@ media
 *$py.class
 
 # Distribution / packaging
-DNA/settings.py
-DNA/wsgi.py
 .Python build/
 develop-eggs/
 dist/
