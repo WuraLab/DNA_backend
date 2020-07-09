@@ -8,3 +8,5 @@ from .serializers import   UserRegistrationSerializers
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class =  UserRegistrationSerializers
+
+# class RegistrationViewSet(viewsets.ModelViewSet):
