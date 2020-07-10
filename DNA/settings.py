@@ -84,6 +84,14 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ]
+}
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'profile')
+MEDIA_URL = '/profile/'
 
 
 # Password validation
