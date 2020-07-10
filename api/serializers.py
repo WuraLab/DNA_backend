@@ -23,7 +23,7 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
 # stop delete by allowany
 
 class ProfileSerializer(serializers.ModelSerializer):
-    user = UserRegistrationSerializers(many=True)
+    user = UserRegistrationSerializers()
     class Meta:
         model = Profile
         fields = ('id',  'facebook_user','phone', 'profile', 'user' )

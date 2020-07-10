@@ -17,7 +17,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
-    parser_class = (FileUploadParser,)
+    # parser_class = (FileUploadParser,)
 
 
     # only set permissions for actions as update
