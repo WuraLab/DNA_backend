@@ -7,7 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import Profile
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.parsers import FileUploadParser
+# from rest_framework.parsers import FileUploadParser
 
 #login was
 class UserViewSet(viewsets.ModelViewSet):

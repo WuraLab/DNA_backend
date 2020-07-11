@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MaxLengthValidator, MinLengthValidator
+# from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False, unique=True,
