@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import Profile
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import obtain_auth_token
 
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
@@ -15,15 +16,14 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
 
     def create(self, validated_data):
         profile_data = validated_data
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create_user(**profile_data)
         Token.objects.create(user=user)
         Profile.objects.create(user=user)
         return user
-# stop retreive by allowany
-# stop delete by allowany
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserRegistrationSerializers()
+    token = obtain_auth_token
     class Meta:
         model = Profile
         fields = ('id',  'facebook_user','phone', 'profile', 'user' )

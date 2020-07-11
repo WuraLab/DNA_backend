@@ -5,7 +5,7 @@ from django.conf.urls import include
 from .views import UserViewSet, ProfileViewSet
 
 router = routers.DefaultRouter()
-router.register('users', UserViewSet)
+router.register('user', UserViewSet)
 router.register('profile', ProfileViewSet)
 
 urlpatterns = [
