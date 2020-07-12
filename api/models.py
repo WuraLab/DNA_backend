@@ -9,5 +9,8 @@ class Profile(models.Model):
     phone = models.CharField( blank=True, unique=True, null=True, max_length=19)
     profile = models.ImageField(upload_to='profile/', blank=True, null=True)
 
+    """
+    String for representing the Profile object (in Admin site etc.).
+    """
     def __str__(self):
         return self.user.first_name
