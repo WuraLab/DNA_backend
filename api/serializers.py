@@ -7,7 +7,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from .models import Profile
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
-
     """User registration  api data formatter"""
     class Meta:  #pylint: disable=too-few-public-methods
 
@@ -18,6 +17,7 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
         extra_kwargs = {
             'password': {'write_only': True, 'required': True}
         }
+    # pylint: disable=R0201
     def create(self, validated_data): #create User && Profile profile model.
         profile_data = validated_data
         user = User.objects.create_user(**profile_data)
@@ -26,7 +26,6 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
-
     """User Profile  api data formatter."""
     user = UserRegistrationSerializers()
     token = obtain_auth_token
@@ -38,7 +37,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
 class EditProfileSerilizer(serializers.ModelSerializer):
-
     """Update/edit user profile api data formatter."""
     class Meta:  #pylint: disable=too-few-public-methods
         """Return optional Profile fields."""
