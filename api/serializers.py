@@ -1,6 +1,4 @@
-"""Serializers converted to querys into JSON, XML or other content types.
-
-"""
+# Serializers converted to querys into JSON, XML or other content types.
 
 from django.contrib.auth.models import User
 from rest_framework import serializers
@@ -9,13 +7,9 @@ from rest_framework.authtoken.views import obtain_auth_token
 from .models import Profile
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
-    """User registration  api data formatter.
-    
-    """
+    # User registration  api data formatter.
     class Meta:  #pylint: disable=too-few-public-methods
-        """Return default User options fields.
-        
-        """
+        # Return default User options fields.
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
         extra_kwargs = {
@@ -30,9 +24,7 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
-    """User Profile  api data formatter.
-    
-    """
+    # User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
 
@@ -44,12 +36,8 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
 class EditProfileSerilizer(serializers.ModelSerializer):
-    """Update/edit user profile api data formatter.
-    
-    """
+    #Update/edit user profile api data formatter.
     class Meta:  #pylint: disable=too-few-public-methods
-        """Return optional Profile fields.
-        
-        """
+        # Return optional Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile',)
