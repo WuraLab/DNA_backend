@@ -28,11 +28,10 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
 
     """User Profile  api data formatter."""
-
     user = UserRegistrationSerializers()
     token = obtain_auth_token
-    class Meta:  #pylint: disable=too-few-public-methods
 
+    class Meta:  #pylint: disable=too-few-public-methods
         """Return Profile fields."""
 
         model = Profile
@@ -41,9 +40,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 class EditProfileSerilizer(serializers.ModelSerializer):
 
     """Update/edit user profile api data formatter."""
-
     class Meta:  #pylint: disable=too-few-public-methods
-
         """Return optional Profile fields."""
 
         model = Profile

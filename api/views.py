@@ -17,20 +17,24 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
 
     # update - default method should be restricted
+    # pylint: disable=R0201
     def update(self, request, *args, **kwargs):
         response = {'message': 'You cant Update your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # destroy - IsAuthenticated an isSelf
+    # pylint: disable=R0201
     def destroy(self, request,  *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # retrieve - default method for all should be restricted,
+    # pylint: disable=R0201
     def list(self, request, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
+        
+    # pylint: disable=R0201
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -47,18 +51,22 @@ class ProfileViewSet(viewsets.ModelViewSet):
     # only set permissions for actions as update
     # remember to customise Create, delete, retrieve
 
+    # pylint: disable=R0201
     def update(self, request, *args, **kwargs):
         response = {'message': 'You cant edit your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    # pylint: disable=R0201
     def create(self, request, *args, **kwargs):
         response = {'message': 'You cant create Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    # pylint: disable=R0201
     def destroy(self, request,  *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
+    # pylint: disable=R0201
     def list(self, request, *args, **kwargs):
         if request.user:
             user = request.user
@@ -68,12 +76,14 @@ class ProfileViewSet(viewsets.ModelViewSet):
         response = {'message': 'User profile ', 'result': serializer.data}
         return Response(response, status=status.HTTP_200_OK)
 
+    # pylint: disable=R0201
     def retrieve(self, request, pk=None,  *args, **kwargs):
         response = {'message': 'You cant   retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
     # write a custom method that uses the authToken for access privileges
+    # pylint: disable=R0201
     @action(detail=True, methods=['POST'])
     def update_profile(self, request, pk=None,):
         if request.data :
