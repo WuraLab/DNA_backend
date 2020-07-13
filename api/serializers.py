@@ -8,8 +8,7 @@ from .models import Profile
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
-     #pylint: disable=too-few-public-methods
-    class Meta: 
+    class Meta:    #pylint: disable=too-few-public-methods
         # Return default User options fields.
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
@@ -28,8 +27,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     # User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
-
-    class Meta:  #pylint: disable=too-few-public-methods
+    class Meta:    #pylint: disable=too-few-public-methods
         # Return Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
