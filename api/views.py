@@ -33,7 +33,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        
     # pylint: disable=R0201
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
