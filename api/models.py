@@ -12,5 +12,5 @@ class Profile(models.Model):
 
     def __str__(self):
         """one-line docstring for representing the Profile object."""
-        return self.user.first_name
+        return f'{self.user.first_name}'
 

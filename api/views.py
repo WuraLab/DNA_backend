@@ -70,20 +70,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
         if request.user:
             user = request.user
         profile = Profile.objects.get(user=user.id)
-        print(profile)
         serializer = ProfileSerializer(profile, many=False)
         response = {'message': 'User profile ', 'result': serializer.data}
         return Response(response, status=status.HTTP_200_OK)
 
     # pylint: disable=R0201
     def retrieve(self, request, pk=None,  *args, **kwargs):
-        response = {'message': 'You cant   retrieve users Profile like this'}
+        response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
     # write a custom method that uses the authToken for access privileges
     # pylint: disable=R0201
-    @action(detail=True, methods=['POST'])
+    @action(detail=True, methods=['PUT'])
     def update_profile(self, request, pk=None,):
         if request.data :
             fetched_data =  request.data
@@ -93,7 +92,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
                  profile.update(facebook_user=fetched_data['facebook_user'],
                                 phone=fetched_data['phone'],
                                 profile=request.FILES.get('profile'))
-                 serializer = EditProfileSerilizer(profile, many=False)
+                 get_profile = Profile.objects.get(user=user.id, id=pk)
+                 serializer = EditProfileSerilizer(get_profile, many=False)
                  response = {'message': 'User profile  Updated', 'result': serializer.data}
                  return Response(response, status=status.HTTP_200_OK)
 
