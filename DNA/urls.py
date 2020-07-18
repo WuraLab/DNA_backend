@@ -6,6 +6,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
-    path('auth/', obtain_auth_token),
+    path('api/<version>/', include('api.urls')),
+    path('api/<version>/login/', obtain_auth_token),  # Authenticate the login credentials and return the AuthToken
 ]

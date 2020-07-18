@@ -7,6 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import Profile
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
 # from rest_framework.parsers import FileUploadParser
 
 #login was
@@ -15,10 +16,10 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class =  UserRegistrationSerializers
     authentication_classes = (TokenAuthentication,)
     permission_classes = (AllowAny,)
-
+    versions =['v1', 'v2','v3']
     # update - default method should be restricted
     # pylint: disable=R0201
-    def update(self, request, *args, **kwargs):
+    def update(self, request, *args, **kwargs ):
         response = {'message': 'You cant Update your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
@@ -39,14 +40,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-
-
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
-
+    versions = ['v1', 'v2', 'v3']
     # only set permissions for actions as update
     # remember to customise Create, delete, retrieve
 
@@ -66,40 +65,54 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # pylint: disable=R0201
-    def list(self, request, *args, **kwargs):
-        if request.user:
-            user = request.user
-        profile = Profile.objects.get(user=user.id)
-        print(profile)
-        serializer = ProfileSerializer(profile, many=False)
-        response = {'message': 'User profile ', 'result': serializer.data}
-        return Response(response, status=status.HTTP_200_OK)
+    def list(self, request, version="v1", *args, **kwargs):
+            # check if the version argument exists in the versions list
+         if version in self.versions:
+
+                if request.user:
+                    try:
+                        user = request.user
+                        profile = Profile.objects.get(user=user.id)
+                        serializer = ProfileSerializer(profile, many=False)
+                        response = {'message': 'User profile ', 'result': serializer.data}
+                        return Response(response, status=status.HTTP_200_OK)
+                    except IndexError:
+                        response = {'message': 'User not Authenticated! '}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+         else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
 
     # pylint: disable=R0201
     def retrieve(self, request, pk=None,  *args, **kwargs):
-        response = {'message': 'You cant   retrieve users Profile like this'}
+        response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
     # write a custom method that uses the authToken for access privileges
     # pylint: disable=R0201
-    @action(detail=True, methods=['POST'])
-    def update_profile(self, request, pk=None,):
-        if request.data :
-            fetched_data =  request.data
-            user = request.user
-            try :
-                 profile = Profile.objects.filter(user=user.id, id=pk )
-                 profile.update(facebook_user=fetched_data['facebook_user'],
-                                phone=fetched_data['phone'],
-                                profile=request.FILES.get('profile'))
-                 serializer = EditProfileSerilizer(profile, many=False)
-                 response = {'message': 'User profile  Updated', 'result': serializer.data}
-                 return Response(response, status=status.HTTP_200_OK)
+    @action(detail=True, methods=['PUT'])
+    def update_profile(self, request, version="v1", pk=None,):
+        # check if the version argument exists in the versions list
+        if version in self.versions:
+            if request.data :
+                fetched_data =  request.data
+                user = request.user
+                try :
+                     profile = Profile.objects.filter(user=user.id, id=pk )
+                     profile.update(facebook_user=fetched_data['facebook_user'],
+                                    phone=fetched_data['phone'],
+                                    profile=request.FILES.get('profile'))
+                     get_profile = Profile.objects.get(user=user.id, id=pk)
+                     serializer = EditProfileSerilizer(get_profile, many=False)
+                     response = {'message': 'User profile  Updated', 'result': serializer.data}
+                     return Response(response, status=status.HTTP_200_OK)
 
-            except IndexError :
-                response = {'message': 'user profile does not exit'}
-                return Response(response, status=status.HTTP_200_OK)
+                except IndexError :
+                    response = {'message': 'user profile does not exit'}
+                    return Response(response, status=status.HTTP_200_OK)
         else:
-            response = {'message': 'Nothing to update!'}
+            response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
