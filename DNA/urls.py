@@ -4,7 +4,9 @@ from django.urls import  path
 from django.conf.urls import  include
 from rest_framework.authtoken.views import obtain_auth_token
 
+''' Passing API version argument Through the URL in Django '''
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls'))
+    path('api/<version>/', include('api.urls')),
+    path('api/<version>/login/', obtain_auth_token),  # Authenticate the login credentials and return the AuthToken
 ]
