@@ -7,6 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import Profile
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
 # from rest_framework.parsers import FileUploadParser
 
 #login was
@@ -37,8 +38,6 @@ class UserViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-
 
 
 class ProfileViewSet(viewsets.ModelViewSet):
