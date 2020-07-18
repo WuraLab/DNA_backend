@@ -1,3 +1,16 @@
 from django.db import models
+from django.contrib.auth.models import User
+# from django.core.validators import MaxLengthValidator, MinLengthValidator
 
-# Create your models here.
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False, unique=True,
+                                related_name = 'user')
+    facebook_user = models.CharField(max_length=50, blank=True, null=True, unique=True )
+    phone = models.CharField( blank=True, unique=True, null=True, max_length=19)
+    profile = models.ImageField(upload_to='profile/', blank=True, null=True)
+
+
+    def __str__(self):
+        """one-line docstring for representing the Profile object."""
+        return self.user.first_name
+
