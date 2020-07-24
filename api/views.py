@@ -4,9 +4,12 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from .models import Profile
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
+from .models import Profile,add_loan_record
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+
+from datetime import timedelta
+from django.utils import timezone
 
 # from rest_framework.parsers import FileUploadParser
 
@@ -116,3 +119,55 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddLoanViewSet(viewsets.ModelViewSet):
+    serializer_class = AddLoanSerializer
+    queryset = add_loan_record.objects.all()
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+   
+
+    def update(self, request, *args, **kwargs ):
+        response = {'message': 'You cant Update your Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+
+
+
+    # def get_context_data(self, **kwargs):
+    #        context = super(add_loan_record, self).get_context_data(**kwargs)
+    #        print(context)
+    #        context['allorders']=  print('Hello')
+    #        return context
+          
+
+
+
+    #  # pylint: disable=R0201
+    # def list(self, request, version="v1", *args, **kwargs):
+    #         # check if the version argument exists in the versions list
+    #      if version in self.versions:
+
+    #             if request.user:
+    #                 try:
+    #                     user = request.user
+    #                     profile = add_loan_record.objects.get(loan=user.user_id)
+    #                     past_week = timezone.now().date() - timedelta(days=7) 
+    #                     objects = RoutineOrder.objects.filter(added__gte=past_week)
+    #                     print('hello')
+                        
+    #                     serializer = AddLoanSerializer(objects, many=False)
+    #                     response = {'message': 'Loan User ', 'result': serializer.data}
+    #                     return Response(response, status=status.HTTP_200_OK)
+    #                 except IndexError:
+    #                     response = {'message': 'User not Authenticated! '}
+    #                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    #      else:
+    #         response = {'message': 'API version not identified!'}
+    #         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+

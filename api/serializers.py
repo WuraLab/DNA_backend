@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token
-from .models import Profile
+from .models import Profile,add_loan_record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
@@ -38,3 +38,13 @@ class EditProfileSerilizer(serializers.ModelSerializer):
         # Return optional Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile',)
+
+
+
+class AddLoanSerializer(serializers.ModelSerializer):
+    #Adding of load detail
+    class Meta:
+        #return option Loan
+            model=add_loan_record
+            fields=('loan','user_id','created','amount','interest_rate','paid','borrower','description','balance_to_pay')
+
