@@ -7,6 +7,18 @@ from rest_framework.authentication import TokenAuthentication
 from .models import Profile
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+import jwt
+import os
+from datetime import datetime, timedelta
+import asyncio
+# favour django-mailer but fall back to django.core.mail
+from django.conf import settings
+
+if "mailer" in settings.INSTALLED_APPS:
+    from mailer import send_mail
+else:
+    from django.core.mail import send_mail
+
 
 # from rest_framework.parsers import FileUploadParser
 
@@ -16,7 +28,7 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class =  UserRegistrationSerializers
     authentication_classes = (TokenAuthentication,)
     permission_classes = (AllowAny,)
-    versions =['v1', 'v2','v3']
+    versions =['v1']
     # update - default method should be restricted
     # pylint: disable=R0201
     def update(self, request, *args, **kwargs ):
@@ -45,7 +57,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     serializer_class = ProfileSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
-    versions = ['v1', 'v2', 'v3']
+    versions = ['v1']
     # only set permissions for actions as update
     # remember to customise Create, delete, retrieve
 
@@ -116,3 +128,61 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+class RecoveryViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all() #used by serializers output
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
+    versions =['v1']
+
+    def create(self, request, version="v1", *args, **kwargs):
+    # check if the version argument exists in the versions list
+        if version in self.versions:
+            if request.data :
+                fetched_data =  request.data
+                email= fetched_data['email']
+                try :
+                #    check in fetch email exits
+                    user = User.objects.get(email=email)
+                    # create jwt token
+                    secret = os.getenv("JWTSECRET")
+                    # token expires in 30 seconds
+                    dt = datetime.now() + timedelta(seconds=30)   
+                    encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
+                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded}'
+                    send_mail(
+                        f' Debt notification account recovery request',
+                        f' Hello {user}, click here {reset_link} to Reset your Password',
+                        'admin@DNA.com',
+                        [email],
+                        fail_silently=False,
+                    )
+                    print(encoded.decode("utf-8"))
+                    response= {'token': 'email sent!'}
+                    return Response(response, status=status.HTTP_200_OK)
+                except User.DoesNotExist:
+                    response = {'message': 'No user associated with this email exits!'}
+                    return Response(response, status=status.HTTP_404_NOT_FOUND)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=True, methods=['POST'])
+    def validate_token(self,version="v1"):
+        if version in self.versions:
+            if request.data :
+                fetched_data =  request.data
+                token= fetched_data['token']
+                try:
+                    secret = os.getenv("JWTSECRET")
+                    decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
+                    response= {'message': 'Token is still valid and active'}
+                    return Response(response, status=status.HTTP_200_OK)
+                except jwt.ExpiredSignatureError:
+                    response= {'message': 'Token expired. Get new one'}
+                    return Response(response, status=status.HTTP_200_OK)
+                except jwt.InvalidTokenError:
+                    response= {'message': 'Invalid Token'}
+                    return Response(response, status=status.HTTP_200_OK)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST) 

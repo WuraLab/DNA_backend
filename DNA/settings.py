@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,12 +22,14 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
+# SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
+DEBUG = os.getenv("DEBUG")
+SECRET_KEY = os.getenv("SECRETKEY")
 ALLOWED_HOSTS = []
+
 
 
 # Application definition
@@ -39,6 +43,7 @@ INSTALLED_APPS = [
 'django.contrib.staticfiles',
 'rest_framework',
 'rest_framework.authtoken',
+'mailer',
 'api',
 ]
 
@@ -72,7 +77,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DNA.wsgi.application'
-
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = "mailer.backend.DbBackend"
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
