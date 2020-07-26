@@ -127,6 +127,7 @@ class AddLoanViewSet(viewsets.ModelViewSet):
 
     # only set permissions for actions as creating
     def update(self, request, *args, **kwargs ):
+        # write a custom method that uses the authToken for access privileges
         response = {'message': 'You cant Update your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
        
