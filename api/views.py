@@ -122,7 +122,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 class AddLoanViewSet(viewsets.ModelViewSet):
     serializer_class = AddLoanSerializer
     queryset = add_loan_record.objects.all()
-    authentication_classes = (TokenAuthentication,)  
+    authentication_classes = (TokenAuthentication,) 
     permission_classes = (IsAuthenticated,)
 
     # only set permissions for actions as creating
