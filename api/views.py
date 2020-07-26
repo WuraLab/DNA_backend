@@ -7,8 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import Profile,add_loan_record
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from datetime import timedelta
-from django.utils import timezone
+
 
 # from rest_framework.parsers import FileUploadParser
 
