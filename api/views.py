@@ -10,7 +10,6 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
 from datetime import datetime, timedelta
-import bcrypt
 # favour django-mailer but fall back to django.core.mail
 from django.conf import settings
 
