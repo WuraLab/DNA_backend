@@ -201,9 +201,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     secret = os.getenv("JWTSECRET")
                     decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
-                    # hash password
-                    hashAndSalt_password = bcrypt.hashpw(new_password.encode(), bcrypt.gensalt())
-                    print(hashAndSalt_password.decode("utf-8"))
+                   
                     # modify existing user
                     user = User.objects.get(email=email)
                     print(user.password)
