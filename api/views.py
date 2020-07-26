@@ -122,11 +122,10 @@ class ProfileViewSet(viewsets.ModelViewSet):
 class AddLoanViewSet(viewsets.ModelViewSet):
     serializer_class = AddLoanSerializer
     queryset = add_loan_record.objects.all()
-    authentication_classes = (TokenAuthentication,) 
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
 
     # only set permissions for actions as creating
-   
      # pylint: disable=R0201
     def update(self, request, *args, **kwargs ):
         response = {'message': 'You cant Update your Profile like that'}
