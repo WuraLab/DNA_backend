@@ -125,18 +125,3 @@ class AddLoanViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
 
-    # only set permissions for actions as creating
-    def update(self, request, *args, **kwargs ):
-        # write a custom method that uses the authToken for access privileges
-        response = {'message': 'You cant Update your Profile like that'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-       
-
-
-    
-
-
-
-
-
-
