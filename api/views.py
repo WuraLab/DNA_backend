@@ -123,6 +123,8 @@ class AddLoanViewSet(viewsets.ModelViewSet):
     serializer_class = AddLoanSerializer
     queryset = add_loan_record.objects.all()
     permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+
 
     # only set permissions for actions as creating
      # pylint: disable=R0201
