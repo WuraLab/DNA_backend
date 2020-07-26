@@ -30,9 +30,6 @@ class add_loan_record(models.Model):
     description=models.TextField(blank=True)
     balance_to_pay=models.CharField(max_length=200,blank=True)
 
-
-    
- 
     def __str__(self):
        """one-line docstring for representing the Profile object."""
        return self.loan
