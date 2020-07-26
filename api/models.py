@@ -34,5 +34,5 @@ class add_loan_record(models.Model):
     
  
     def __str__(self):
-     """one-line docstring for representing the Profile object."""
+       """one-line docstring for representing the Profile object."""
        return self.loan
