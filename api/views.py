@@ -12,11 +12,8 @@ import os
 from datetime import datetime, timedelta
 # favour django-mailer but fall back to django.core.mail
 from django.conf import settings
-
-if "mailer" in settings.INSTALLED_APPS:
-    from mailer import send_mail
-else:
-    from django.core.mail import send_mail
+# from django.core.mail import send_mail
+from django.core.mail import EmailMultiAlternatives
 
 
 # from rest_framework.parsers import FileUploadParser
@@ -149,13 +146,18 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     dt = datetime.now() + timedelta(minutes=30)   
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
                     reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded}'
-                    send_mail(
-                        f' Debt notification account recovery request',
-                        f' Hello {user}, click here {reset_link} to Reset your Password',
-                        'admin@DNA.com',
-                        [email],
-                        fail_silently=False,
-                    )
+
+                    # send an e-mail to the user
+                   
+                    subject, from_email, to =  'Debt notification account recovery request', settings.EMAIL_HOST_USER, email
+                    text_content =  f' Hello {user}, click here {reset_link} to Reset your Password.'
+                    html_content = '<p>Hello {user} , clic <a href={reset_link}>here <a/> to Reset your Password.</p>'
+                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+                    msg.attach_alternative(html_content, "text/html")
+                    send = msg.send()
+                    print(send)
+
+
                     print(encoded.decode("utf-8"))
                     response= {'token': 'email sent!'}
                     return Response(response, status=status.HTTP_200_OK)
