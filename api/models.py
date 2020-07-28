@@ -19,15 +19,15 @@ class Profile(models.Model):
 
 
 class add_loan_record(models.Model):
-    loan=models.CharField(max_length=200, null=True)
+    loan=models.CharField(max_length=200)
     user_id=models.ForeignKey(User,on_delete=models.CASCADE)
-    due_date=models.DateField(auto_now=True)
+    due_date=models.DateField()
     created=models.DateField(auto_now_add=True)
-    amount=models.TextField()
-    interest_rate=models.IntegerField()
+    amount=models.IntegerField()
+    interest_rate=models.DecimalField(max_digits=19, decimal_places=10)
     paid=models.BooleanField(default=False)
-    borrower=models.CharField(max_length=200)
-    description=models.TextField(blank=True)
+    borrower=models.BooleanField(default=True)
+    description=models.TextField()
     balance_to_pay=models.CharField(max_length=200,blank=True)
 
     def __str__(self):
