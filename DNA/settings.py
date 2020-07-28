@@ -30,6 +30,13 @@ DEBUG = os.getenv("DEBUG")
 SECRET_KEY = os.getenv("SECRETKEY")
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+
 ALLOWED_HOSTS = []
 
 
@@ -45,7 +52,6 @@ INSTALLED_APPS = [
 'django.contrib.staticfiles',
 'rest_framework',
 'rest_framework.authtoken',
-'mailer',
 'api',
 ]
 
@@ -65,7 +71,7 @@ ROOT_URLCONF = 'DNA.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -79,13 +85,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DNA.wsgi.application'
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = EMAIL_HOST
 EMAIL_HOST_USER = EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
-DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_PORT = EMAIL_PORT
+EMAIL_USE_TLS = EMAIL_USE_TLS
+
+
+
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases

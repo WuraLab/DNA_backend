@@ -12,8 +12,10 @@ import os
 from datetime import datetime, timedelta
 # favour django-mailer but fall back to django.core.mail
 from django.conf import settings
-# from django.core.mail import send_mail
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import send_mail
+from django.core.mail import EmailMessage
+import smtplib
+from django.template.loader import render_to_string
 
 
 # from rest_framework.parsers import FileUploadParser
@@ -145,20 +147,22 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=30)   
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
-                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded}'
+                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
                     # send an e-mail to the user
-                   
-                    subject, from_email, to =  'Debt notification account recovery request', settings.EMAIL_HOST_USER, email
-                    text_content =  f' Hello {user}, click here {reset_link} to Reset your Password.'
-                    html_content = '<p>Hello {user} , clic <a href={reset_link}>here <a/> to Reset your Password.</p>'
-                    msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
-                    msg.attach_alternative(html_content, "text/html")
-                    send = msg.send()
-                    print(send)
 
+                    msg_plain = render_to_string('templates/password_reset_email.txt', {'user': user, 'reset_link': reset_link})
+                    msg_html = render_to_string('templates/password_reset_email.html', {'user': user, 'reset_link': reset_link})
 
-                    print(encoded.decode("utf-8"))
+                    subject = 'Debt notification account recovery request.'
+                    from_email = settings.EMAIL_HOST_USER
+                    message,
+                    recipient_list = ['oaikhenahpeterson@gmail.com']
+                    msg_html
+
+                    send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=msg_html)
+
+                    print(reset_link)
                     response= {'token': 'email sent!'}
                     return Response(response, status=status.HTTP_200_OK)
                 except User.DoesNotExist:
