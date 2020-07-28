@@ -28,6 +28,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 SECRET_KEY = os.getenv("SECRETKEY")
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 ALLOWED_HOSTS = []
 
 
@@ -81,8 +83,8 @@ WSGI_APPLICATION = 'DNA.wsgi.application'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'debtapp95@gmail.com'
-EMAIL_HOST_PASSWORD = 'gfrawjggnnedcirz'
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 # Database
