@@ -150,19 +150,20 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
                     # send an e-mail to the user
-
-                    msg_plain = render_to_string('templates/password_reset_email.txt', {'user': user, 'reset_link': reset_link})
-                    msg_html = render_to_string('templates/password_reset_email.html', {'user': user, 'reset_link': reset_link})
+                    context = {
+                         'user': user,
+                         'reset_link': reset_link
+                    }
+                    msg_plain = render_to_string('../templates/password_reset_email.txt', context)
+                    msg_html = render_to_string('../templates/password_reset_email.html', context)
 
                     subject = 'Debt notification account recovery request.'
                     from_email = settings.EMAIL_HOST_USER
-                    message,
-                    recipient_list = ['oaikhenahpeterson@gmail.com']
-                    msg_html
+                    message = msg_plain
+                    recipient_list = [email]
 
                     send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=msg_html)
 
-                    print(reset_link)
                     response= {'token': 'email sent!'}
                     return Response(response, status=status.HTTP_200_OK)
                 except User.DoesNotExist:
