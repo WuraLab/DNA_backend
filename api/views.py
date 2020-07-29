@@ -13,8 +13,6 @@ from datetime import datetime, timedelta
 # favour django-mailer but fall back to django.core.mail
 from django.conf import settings
 from django.core.mail import send_mail
-from django.core.mail import EmailMessage
-import smtplib
 from django.template.loader import render_to_string
 
 
