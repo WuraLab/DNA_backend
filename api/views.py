@@ -160,7 +160,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 #    check in fetch email exits
                     user = User.objects.get(email=email)
                     # create jwt token
-                    secret = os.getenv("JWTSECRET")
+                    secret = os.getenv("SECRETKEY")
                     # token expires in 30 seconds
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=30)   
@@ -172,7 +172,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                          'user': user,
                          'reset_link': reset_link
                     }
-                    
+
                     msg_plain = render_to_string('../templates/password_reset_email.txt', context)
                     msg_html = render_to_string('../templates/password_reset_email.html', context)
 
@@ -199,7 +199,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 fetched_data =request.data
                 encoded_token= fetched_data['token']
                 try:
-                        secret = os.getenv("JWTSECRET")
+                        secret = os.getenv("SECRETKEY")
                         decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                         response= {'message': 'Token is still valid and active :)'}
                         return Response(response, status=status.HTTP_200_OK)
@@ -223,7 +223,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     encoded_token= fetched_data['token']
                     new_password = fetched_data['password']
 
-                    secret = os.getenv("JWTSECRET")
+                    secret = os.getenv("SECRETKEY")
                     decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
                    
