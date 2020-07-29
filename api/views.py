@@ -130,6 +130,26 @@ class RecoveryViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     versions =['v1']
 
+    def update(self, request, *args, **kwargs):
+        response = {'message': 'You cant edit your Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+     # pylint: disable=R0201
+    def list(self, request, *args, **kwargs):
+        response = {'message': 'You cant create Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+     # pylint: disable=R0201
+    def destroy(self, request,  *args, **kwargs):
+        response = {'message': 'You cant delete Profile like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    # pylint: disable=R0201
+    def retrieve(self, request, pk=None,  *args, **kwargs):
+        response = {'message': 'You cant retrieve users Profile like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        
+
     def create(self, request, version="v1", *args, **kwargs):
     # check if the version argument exists in the versions list
         if version in self.versions:
