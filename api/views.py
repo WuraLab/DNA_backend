@@ -148,7 +148,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
     def retrieve(self, request, pk=None,  *args, **kwargs):
         response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        
+
 
     def create(self, request, version="v1", *args, **kwargs):
     # check if the version argument exists in the versions list
@@ -172,6 +172,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                          'user': user,
                          'reset_link': reset_link
                     }
+                    
                     msg_plain = render_to_string('../templates/password_reset_email.txt', context)
                     msg_html = render_to_string('../templates/password_reset_email.html', context)
 
@@ -228,7 +229,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                    
                     # modify existing user
                     user = User.objects.get(email=email)
-                    print(user.password)
+    
                     user.set_password(new_password)
                     user.save()
                     response = {'success': 'Password reset was successful!'}
