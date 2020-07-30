@@ -161,9 +161,8 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     user = User.objects.get(email=email)
                     # create jwt token
                     secret = os.getenv("SECRETKEY")
-                    # token expires in 30 seconds
                     # minutes=1
-                    dt = datetime.now() + timedelta(minutes=30)   
+                    dt = datetime.now() + timedelta(minutes=1)   
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
                     reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
@@ -172,7 +171,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                          'user': user,
                          'reset_link': reset_link
                     }
-
+                    print(reset_link)
                     msg_plain = render_to_string('../templates/password_reset_email.txt', context)
                     msg_html = render_to_string('../templates/password_reset_email.html', context)
 
