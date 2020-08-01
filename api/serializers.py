@@ -28,9 +28,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserRegistrationSerializers()
     token = obtain_auth_token
 
-    #pylint: disable=too-few-public-methods
-    #Return optional Profile fields.
+    """one-line docstring for representing the Profile object."""
     class Meta:
+     """one-line docstring for representing the Profile object."""
         #pylint: disable=too-few-public-methods
         #Return Profile fields.
         model = Profile
