@@ -33,7 +33,6 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
 class EditProfileSerilizer(serializers.ModelSerializer):
-    #Update/edit user profile api data formatter.
     class Meta:  
         #pylint: disable=too-few-public-methods
         # Return optional Profile fields.
