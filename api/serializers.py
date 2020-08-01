@@ -45,6 +45,6 @@ class AddLoanSerializer(serializers.ModelSerializer):
     #Adding of load detail
     class Meta:
         #return option Loan
-            model=Loan_Record
-            fields=('user','created','amount','interest_rate','paid','lender','description','balance_to_pay',"due_date")
+        model=Loan_Record
+        fields=('user','created','amount','interest_rate','paid','lender','description','balance_to_pay',"due_date")
 
