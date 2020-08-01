@@ -27,6 +27,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     # User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
+
+    #pylint: disable=too-few-public-methods
+    # Return optional Profile fields.
     class Meta:
         #pylint: disable=too-few-public-methods
         # Return Profile fields.
