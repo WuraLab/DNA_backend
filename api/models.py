@@ -30,7 +30,6 @@ class Loan_Record(models.Model):
     description=models.TextField()
     balance_to_pay=models.IntegerField(blank=True,null=True)
     
-
     def __str__(self):
        """one-line docstring for representing the L object."""
        return self.description
