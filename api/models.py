@@ -29,9 +29,10 @@ class Loan_Record(models.Model):
     lender=models.BooleanField(default=True)
     description=models.TextField()
     balance_to_pay=models.IntegerField(blank=True,null=True)
+    
 
     def __str__(self):
-       """one-line docstring for representing the Profile object."""
+       """one-line docstring for representing the L object."""
        return self.description
 
   
