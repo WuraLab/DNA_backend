@@ -4,7 +4,7 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from .models import Profile,add_loan_record
+from .models import Profile,Loan_Record
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
@@ -121,7 +121,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 class AddLoanViewSet(viewsets.ModelViewSet):
     serializer_class = AddLoanSerializer
-    queryset = add_loan_record.objects.all()
+    queryset = Loan_Record.objects.all()
     permission_classes = (IsAuthenticated,)
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
 

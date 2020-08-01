@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token
-from .models import Profile,add_loan_record
+from .models import Profile,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
@@ -45,6 +45,6 @@ class AddLoanSerializer(serializers.ModelSerializer):
     #Adding of load detail
     class Meta:
         #return option Loan
-            model=add_loan_record
-            fields=('loan','user_id','created','amount','interest_rate','paid','borrower','description','balance_to_pay')
+            model=Loan_Record
+            fields=('user','created','amount','interest_rate','paid','lender','description','balance_to_pay',"due_date")
 

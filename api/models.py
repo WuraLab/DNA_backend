@@ -1,5 +1,11 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.db.models import F
+from django.core.signals import request_finished
+
 # from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 class Profile(models.Model):
@@ -18,18 +24,19 @@ class Profile(models.Model):
 
 
 
-class add_loan_record(models.Model):
-    loan=models.CharField(max_length=200)
-    user_id=models.ForeignKey(User,on_delete=models.CASCADE)
-    due_date=models.DateField(null=True)
+class Loan_Record(models.Model):
+    user =models.ForeignKey(User,on_delete=models.CASCADE)
+    due_date=models.DateField(blank=True, null=True)
     created=models.DateField(auto_now_add=True)
-    amount=models.IntegerField()
-    interest_rate=models.DecimalField(max_digits=19, decimal_places=10)
+    amount=models.CharField(max_length=200)
+    interest_rate=models.CharField(max_length=200)
     paid=models.BooleanField(default=False)
-    borrower=models.BooleanField(default=True)
+    lender=models.BooleanField(default=True)
     description=models.TextField()
-    balance_to_pay=models.CharField(max_length=200,blank=True)
+    balance_to_pay=models.IntegerField(blank=True,null=True)
 
     def __str__(self):
        """one-line docstring for representing the Profile object."""
-       return self.loan
+       return self.description
+
+  
