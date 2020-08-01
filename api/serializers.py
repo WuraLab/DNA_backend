@@ -29,10 +29,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     token = obtain_auth_token
 
     #pylint: disable=too-few-public-methods
-    # Return optional Profile fields.
+    #Return optional Profile fields.
     class Meta:
         #pylint: disable=too-few-public-methods
-        # Return Profile fields.
+        #Return Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
