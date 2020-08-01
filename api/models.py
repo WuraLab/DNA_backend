@@ -29,7 +29,7 @@ class Loan_Record(models.Model):
     due_date=models.DateField(blank=True, null=True)
     created=models.DateField(auto_now_add=True)
     amount=models.CharField(max_length=200)
-    interest_rate=models.DecimalField(max_length=200)
+    interest_rate=models.DecimalField(max_digits=50, decimal_places=2)
     paid=models.BooleanField(default=False)
     lender=models.BooleanField(default=True)
     description=models.TextField()
