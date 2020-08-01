@@ -27,9 +27,13 @@ class ProfileSerializer(serializers.ModelSerializer):
     # User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
+    
+    """
+    The Meta class
+    """
 
     class Meta:
-        """one-line docstring for representing the Profile object.""" 
+      
 
 
         model = Profile
