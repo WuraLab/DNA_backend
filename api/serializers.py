@@ -30,8 +30,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     """one-line docstring for representing the Profile object.""" 
     class Meta:
-        #pylint: disable=too-few-public-methods
-        #Return Profile fields.
+        """one-line docstring for representing the Profile object.""" 
+
+
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
