@@ -27,14 +27,14 @@ class ProfileSerializer(serializers.ModelSerializer):
     # User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
-    class Meta:   
+    class Meta:
         #pylint: disable=too-few-public-methods
         # Return Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
 class EditProfileSerilizer(serializers.ModelSerializer):
-    class Meta:  
+    class Meta:
         #pylint: disable=too-few-public-methods
         #Return optional Profile fields.
         model = Profile
@@ -46,7 +46,7 @@ class AddLoanSerializer(serializers.ModelSerializer):
     #Adding of load detail
     class Meta:
         #pylint: disable=too-few-public-methods
-        #Return optional Profile fields.    
+        #Return optional Profile fields.
         model=Loan_Record
         fields=('user','created','amount','interest_rate','paid','lender','description','balance_to_pay',"due_date")
 
