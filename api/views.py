@@ -199,7 +199,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 encoded_token= fetched_data['token']
                 try:
                         secret = os.getenv("SECRETKEY")
-                        decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
+                        jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                         response= {'message': 'Token is still valid and active :)'}
                         return Response(response, status=status.HTTP_200_OK)
                 except jwt.ExpiredSignatureError:
