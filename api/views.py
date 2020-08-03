@@ -162,7 +162,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # create jwt token
                     secret = os.getenv("SECRETKEY")
                     # minutes=1
-                    dt = datetime.now() + timedelta(minutes=1)   
+                    dt = datetime.now() + timedelta(minutes=1)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
                     reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
@@ -210,8 +210,8 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                         return Response(response, status=status.HTTP_200_OK)
         else:
             response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST) 
-    
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
     @action(detail=False, methods=['POST'])
     def confirm(self,request, version="v1"):
         if version in self.versions:
@@ -225,10 +225,10 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     secret = os.getenv("SECRETKEY")
                     decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
-                   
+
                     # modify existing user
                     user = User.objects.get(email=email)
-    
+
                     user.set_password(new_password)
                     user.save()
                     response = {'success': 'Password reset was successful!'}
@@ -240,10 +240,6 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 except User.DoesNotExist:
                     response = {'message': 'No user associated with this email exits!'}
                     return Response(response, status=status.HTTP_200_OK)
-                   
-                    response = {'message': 'API version not identified!'}
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST) 
-
         else:
             response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST) 
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
