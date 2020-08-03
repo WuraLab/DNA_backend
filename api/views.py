@@ -130,6 +130,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
     permission_classes = (AllowAny,)
     versions =['v1']
 
+     # pylint: disable=R0201
     def update(self, request, *args, **kwargs):
         response = {'message': 'You cant edit your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
