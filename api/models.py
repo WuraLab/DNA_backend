@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.db.models import F
 # from django.core.validators import MaxLengthValidator, MinLengthValidator
 
 class Profile(models.Model):
@@ -18,22 +20,32 @@ class Profile(models.Model):
 
 
 
-
 class Loan_Record(models.Model):
-    user =models.ForeignKey(User,on_delete=models.CASCADE)
+    user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='record')
     due_date=models.DateField(blank=True, null=True)
     created=models.DateField(auto_now_add=True)
     amount=models.CharField(max_length=200)
-    interest_rate=models.DecimalField(max_digits=50, decimal_places=2)
+    interest_rate=models.IntegerField()
     paid=models.BooleanField(default=False)
     lender=models.BooleanField(default=True)
     description=models.TextField()
     balance_to_pay=models.IntegerField(blank=True,null=True)
 
+            
+
+    def save(self, *args, **kwargs):
+        #the interest is gotten by interest/year * amount
+      if self.interest_rate ==0:
+        super(Loan_Record, self).save(*args, **kwargs)
+        return self.amount
+      else:
+        self.interest_rate = self.interest_rate/12  * int(self.amount)
+        super(Loan_Record, self).save(*args, **kwargs)
+      
+      
 
     def __str__(self):
        """one-line docstring for representing the L object."""
-       return self.loan
-
+       return self.description
 
 

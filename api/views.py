@@ -7,6 +7,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import Profile,Loan_Record
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from .models import Loan_Record
 
 
 # from rest_framework.parsers import FileUploadParser
@@ -120,8 +121,15 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
 
 class AddLoanViewSet(viewsets.ModelViewSet):
-    serializer_class = AddLoanSerializer
     queryset = Loan_Record.objects.all()
-    permission_classes = (IsAuthenticated,)
+    serializer_class =AddLoanSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+    versions = ['v1', 'v2', 'v3'] 
+    
+    #this option is used to authenticate a user, thus django can identify the token and its owner
+    def create(self, request, *args, **kwargs):
+            request.data._mutable = True
+            request.data.update({'user': request.user.id})
 
+            return super(AddLoanViewSet, self).create(request, *args, **kwargs)
