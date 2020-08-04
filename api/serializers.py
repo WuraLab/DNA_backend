@@ -42,5 +42,6 @@ class EditProfileSerilizer(serializers.ModelSerializer):
 
 class AddLoanSerializer(serializers.ModelSerializer):
     class Meta:
+        """one-line docstring for representing the Profile object."""
         model=Loan_Record
         fields=('user','amount','interest_rate','description','balance_to_pay',"due_date")
