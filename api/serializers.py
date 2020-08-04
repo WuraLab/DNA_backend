@@ -8,7 +8,11 @@ from .models import Profile,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
-    class Meta:  #pylint: disable=too-few-public-methods
+    class Meta:  
+        """
+        Return Meta class
+        """
+        #pylint: disable=too-few-public-methods
         # Return default User options fields.
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
@@ -28,8 +32,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserRegistrationSerializers()
     token = obtain_auth_token
     class Meta:
+
         """
-        Returns name of the business when called.
+        Return Meta class
         """
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
@@ -47,7 +52,7 @@ class AddLoanSerializer(serializers.ModelSerializer):
 
     class Meta:
         """
-        Returns name of the business when called.
+        Return Meta class
         """
         #pylint: disable=too-few-public-methods
         #Return optional Profile fields.
