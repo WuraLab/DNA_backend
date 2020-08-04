@@ -28,6 +28,9 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserRegistrationSerializers()
     token = obtain_auth_token
     class Meta:
+        """
+        Returns name of the business when called.
+        """
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
@@ -41,7 +44,7 @@ class EditProfileSerilizer(serializers.ModelSerializer):
 
 
 class AddLoanSerializer(serializers.ModelSerializer):
-   
+
     class Meta:
         """
         Returns name of the business when called.
