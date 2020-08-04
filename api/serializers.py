@@ -41,6 +41,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 class EditProfileSerilizer(serializers.ModelSerializer):
     class Meta:
+        """
+        Return Meta class
+        """
         #pylint: disable=too-few-public-methods
         #Return optional Profile fields.
         model = Profile
