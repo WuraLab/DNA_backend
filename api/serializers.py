@@ -41,8 +41,10 @@ class EditProfileSerilizer(serializers.ModelSerializer):
 
 
 class AddLoanSerializer(serializers.ModelSerializer):
+    """one-line docstring for representing the Profile object."""
+
     class Meta:
-        
-        """one-line docstring for representing the Profile object."""
+        #pylint: disable=too-few-public-methods
+        #Return optional Profile fields.
         model=Loan_Record
         fields=('user','amount','interest_rate','description','balance_to_pay',"due_date")
