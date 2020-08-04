@@ -41,11 +41,11 @@ class EditProfileSerilizer(serializers.ModelSerializer):
 
 
 class AddLoanSerializer(serializers.ModelSerializer):
-    """
-    Returns name of the business when called.
-    """
-
+   
     class Meta:
+        """
+        Returns name of the business when called.
+        """
         #pylint: disable=too-few-public-methods
         #Return optional Profile fields.
         model=Loan_Record
