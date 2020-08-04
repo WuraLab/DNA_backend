@@ -41,7 +41,9 @@ class EditProfileSerilizer(serializers.ModelSerializer):
 
 
 class AddLoanSerializer(serializers.ModelSerializer):
-    """one-line docstring for representing the Profile object."""
+    """
+    Returns name of the business when called.
+    """
 
     class Meta:
         #pylint: disable=too-few-public-methods
