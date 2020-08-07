@@ -58,4 +58,4 @@ class AddLoanSerializer(serializers.ModelSerializer):
         #pylint: disable=too-few-public-methods
         #Return optional Profile fields.
         model=Loan_Record
-        fields=('user','amount','interest_rate','description','balance_to_pay',"due_date")
+        fields=('id','user','amount','interest_rate','description','balance_to_pay',"due_date")
