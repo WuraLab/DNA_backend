@@ -68,6 +68,20 @@ INSTALLED_APPS = [
 ]
 
 
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '329679158218337',
+            'secret': 'f63d610c89c1317fdea68c13ebf493ce',
+            'key': ''
+        }
+    }
+}
+
 
 SITE_ID = 1
 
