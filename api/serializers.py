@@ -18,7 +18,8 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
             'password': {'write_only': True, 'required': True}
         }
     #pylint: disable=R0201
-    def create(self, validated_data): #create User && Profile profile model.
+    def create(self, validated_data):
+        #create User && Profile profile model.
         profile_data = validated_data
         user = User.objects.create_user(**profile_data)
         Token.objects.create(user=user)
@@ -26,7 +27,7 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
-    # User Profile  api data formatter.
+    #User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
     class Meta:
