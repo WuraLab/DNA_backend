@@ -41,7 +41,32 @@ ALLOWED_HOSTS = []
 
 
 
-# Application definition
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
+# social auth settings
+# valid redirect domain for all apps: http://restsocialexample.com:8000/
+SOCIAL_AUTH_FACEBOOK_KEY = '329679158218337'
+SOCIAL_AUTH_FACEBOOK_SECRET = 'f63d610c89c1317fdea68c13ebf493ce'
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', ]
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': ','.join([
+        # public_profile
+        'id', 'cover', 'name', 'first_name', 'last_name', 'age_range', 'link',
+        'gender', 'locale', 'picture', 'timezone', 'updated_time', 'verified',
+        # extra fields
+        'email',
+    ]),
+}
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
+    '976099811367-ihbmg1pfnniln9qgfacleiu41bhl3fqn.apps.googleusercontent.com'
+)
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'JaiLLvY1BK97TSy5_xcGWDhp'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', ]
 
 INSTALLED_APPS = [
 'django.contrib.contenttypes',
@@ -49,11 +74,21 @@ INSTALLED_APPS = [
 'django.contrib.auth',
 'django.contrib.sessions',
 'django.contrib.messages',
+'django.contrib.sites',
 'django.contrib.staticfiles',
 'rest_framework',
 'rest_framework.authtoken',
+'rest_auth',
+'allauth',
+'allauth.account',
+'rest_auth.registration',
+'allauth.socialaccount',
+'allauth.socialaccount.providers.facebook',
+'allauth.socialaccount.providers.google',
 'api',
 ]
+
+SITE_ID = 1
 
 
 MIDDLEWARE = [

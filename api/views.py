@@ -1,11 +1,12 @@
-from django.shortcuts import get_object_or_404
+from allauth.socialaccount.adapter import get_adapter
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
 from .models import Profile
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
+from .serializers import UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer, SocialLoginSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
@@ -14,6 +15,8 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
 
 
 # from rest_framework.parsers import FileUploadParser
@@ -244,3 +247,23 @@ class RecoveryViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
+    """
+        class used for social account linking for facebook with access_token
+    """
+    serializer_class = SocialLoginSerializer
+
+    def process_login(self):
+        get_adapter(self.request).login(self.request, self.user)
+
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    """
+        class used for social account linking for facebook with access_token
+    """
+    serializer_class = SocialLoginSerializer
+
+    def process_login(self):
+        get_adapter(self.request).login(self.request, self.user)
