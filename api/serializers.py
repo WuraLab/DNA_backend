@@ -9,7 +9,10 @@ from .models import Profile,Loan_Record
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
     class Meta:
-        """Check if the script is running."""
+        """
+        Return Meta class
+
+        """
         #pylint: disable=too-few-public-methods
         # Return default User options fields.
         model = User
