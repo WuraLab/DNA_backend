@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
 from .models import Profile
-from .serializers import UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer, SocialLoginSerializer
+from .serializers import UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
@@ -17,6 +17,7 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
+
 
 
 # from rest_framework.parsers import FileUploadParser
@@ -250,20 +251,3 @@ class RecoveryViewSet(viewsets.ModelViewSet):
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
-    """
-        class used for social account linking for facebook with access_token
-    """
-    serializer_class = SocialLoginSerializer
-
-    def process_login(self):
-        get_adapter(self.request).login(self.request, self.user)
-
-class GoogleLogin(SocialLoginView):
-    adapter_class = GoogleOAuth2Adapter
-    """
-        class used for social account linking for facebook with access_token
-    """
-    serializer_class = SocialLoginSerializer
-
-    def process_login(self):
-        get_adapter(self.request).login(self.request, self.user)
