@@ -1,7 +1,5 @@
 # Serializers converted to query's into JSON, XML or other content types.
-from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
-from django.http import HttpRequest
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token

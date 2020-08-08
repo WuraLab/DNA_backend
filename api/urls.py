@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework import routers
 from django.conf.urls import include
-from .views import UserViewSet, ProfileViewSet, RecoveryViewSet, FacebookLogin
+from .views import UserViewSet, ProfileViewSet, RecoveryViewSet
 
 router = routers.DefaultRouter()
 router.register('user', UserViewSet)
