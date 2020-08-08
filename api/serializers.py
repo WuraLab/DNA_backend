@@ -30,10 +30,10 @@ class ProfileSerializer(serializers.ModelSerializer):
     user = UserRegistrationSerializers()
     token = obtain_auth_token
     class Meta:
-
         """
         Return Meta class
         """
+        #pylint: disable=too-few-public-methods
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
