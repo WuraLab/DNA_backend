@@ -10,6 +10,7 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
     #User registration  api data formatter.
 
     class Meta:
+
         '''Return Meta class'''
         #pylint: disable=too-few-public-methods
         model = User
