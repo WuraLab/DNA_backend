@@ -10,6 +10,7 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
     #User registration  api data formatter.
 
     class Meta:
+
         '''Return Meta class'''
         #pylint: disable=too-few-public-methods
         model = User
@@ -38,7 +39,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
 class EditProfileSerilizer(serializers.ModelSerializer):
-   
+
     class Meta:
         '''Return Meta class'''
         #pylint: disable=too-few-public-methods
