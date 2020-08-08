@@ -31,7 +31,7 @@ class Loan_Record(models.Model):
 
 
 
-    def save(self, *args, **kwargs):
+    def create(self, *args, **kwargs):
       #the interest is gotten by interest/year * amount
       if self.interest_rate ==0:
         super(Loan_Record, self).save(*args, **kwargs)
