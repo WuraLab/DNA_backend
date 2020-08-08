@@ -9,8 +9,7 @@ from .models import Profile,Loan_Record
 class UserRegistrationSerializers(serializers.ModelSerializer):
 
     class Meta:
-
-        '''Return Meta class'''
+        'Return Meta class'''
         #pylint: disable=too-few-public-methods
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
