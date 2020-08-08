@@ -7,6 +7,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 from .models import Profile,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
+
     class Meta:
 
         '''Return Meta class'''
