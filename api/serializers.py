@@ -11,7 +11,6 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
     class Meta:
         '''Return Meta class'''
         #pylint: disable=too-few-public-methods
-        #Return default User options fields.
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
         extra_kwargs = {
