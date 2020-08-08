@@ -7,8 +7,6 @@ from rest_framework.authtoken.views import obtain_auth_token
 from .models import Profile,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
-    #User registration  api data formatter.
-
     class Meta:
 
         '''Return Meta class'''
