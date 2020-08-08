@@ -4,21 +4,19 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token
-from .models import Profile,Loan_Record
+from .models import Profile ,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
-    # User registration api
-
+    # User registration  api data formatter.
     class Meta:  #pylint: disable=too-few-public-methods
-        #Return default user options fields
+        # Return default User options fields.
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
         extra_kwargs = {
             'password': {'write_only': True, 'required': True}
         }
     #pylint: disable=R0201
-    def create(self, validated_data):
-        #create User && Profile profile model.
+    def create(self, validated_data): #create User && Profile profile model.
         profile_data = validated_data
         user = User.objects.create_user(**profile_data)
         Token.objects.create(user=user)
@@ -26,26 +24,20 @@ class UserRegistrationSerializers(serializers.ModelSerializer):
         return user
 
 class ProfileSerializer(serializers.ModelSerializer):
-    #User Profile  api data formatter.
+    # User Profile  api data formatter.
     user = UserRegistrationSerializers()
     token = obtain_auth_token
-
-    class Meta:
-        '''Return Meta class'''
-        #pylint: disable=too-few-public-methods
+    class Meta:    #pylint: disable=too-few-public-methods
+        # Return Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile', 'user',)
 
 class EditProfileSerilizer(serializers.ModelSerializer):
-
-    class Meta:
-        '''Return Meta class'''
-        #pylint: disable=too-few-public-methods
-        #Return optional Profile fields.
+    #Update/edit user profile api data formatter.
+    class Meta:  #pylint: disable=too-few-public-methods
+        # Return optional Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile',)
-
-
 
 class AddLoanSerializer(serializers.ModelSerializer):
 
