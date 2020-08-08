@@ -7,13 +7,11 @@ from rest_framework.authtoken.views import obtain_auth_token
 from .models import Profile,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
-    # User registration  api data formatter.
+    #User registration  api data formatter.
     class Meta:
-        """
-        Return Meta class
-        """
+        '''Return Meta class'''
         #pylint: disable=too-few-public-methods
-        # Return default User options fields.
+        #Return default User options fields.
         model = User
         fields = ('id', 'first_name', 'last_name', 'username', 'email', 'password')
         extra_kwargs = {
