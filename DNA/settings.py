@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 import django_heroku
 from decouple import config
-import dj_database_url 
+import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -140,5 +140,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
