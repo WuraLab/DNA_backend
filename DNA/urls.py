@@ -9,3 +9,4 @@ urlpatterns = [
     path('api/<version>/', include('api.urls')),
     path('api/<version>/login/', obtain_auth_token), # Authenticate the login credentials and return the AuthToken
 ]
+ 

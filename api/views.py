@@ -4,8 +4,8 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from .models import Profile
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer
+from .models import Profile,Loan_Record
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
@@ -14,6 +14,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+
 
 
 # from rest_framework.parsers import FileUploadParser
@@ -124,6 +125,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        
 class RecoveryViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all() #used by serializers output
     authentication_classes = (TokenAuthentication,)
@@ -244,3 +246,18 @@ class RecoveryViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AddLoanViewSet(viewsets.ModelViewSet):
+    queryset = Loan_Record.objects.all()
+    serializer_class =AddLoanSerializer
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+    versions = ['v1', 'v2', 'v3']
+
+    #this option is used to authenticate a user, thus django can identify the token and its owner
+    def create(self, request, *args, **kwargs):
+            request.data._mutable = True
+            request.data.update({'user': request.user.id})
+
+            return super(AddLoanViewSet, self).create(request, *args, **kwargs)
