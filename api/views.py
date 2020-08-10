@@ -125,7 +125,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        
 class RecoveryViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all() #used by serializers output
     authentication_classes = (TokenAuthentication,)
