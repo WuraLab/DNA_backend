@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token
-from .models import Profile
+from .models import Profile ,Loan_Record
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
@@ -37,3 +37,10 @@ class EditProfileSerilizer(serializers.ModelSerializer):
         # Return optional Profile fields.
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile',)
+
+class AddLoanSerializer(serializers.ModelSerializer):
+    #AddLoan  api data formaterr.
+    class Meta:   #pylint: disable=too-few-public-methods
+        #Return optional model loan record
+        model=Loan_Record
+        fields=('id','user','amount','interest_rate','description','balance_to_pay',"due_date")

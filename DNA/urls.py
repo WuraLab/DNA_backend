@@ -13,3 +13,4 @@ urlpatterns = [
     path('api/<version>/rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('rest-auth/registration/', include('rest_auth.registration.urls'))
 ]
+ 
