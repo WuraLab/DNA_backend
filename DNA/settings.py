@@ -41,7 +41,11 @@ ALLOWED_HOSTS = []
 
 
 
-# Application definition
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
 
 INSTALLED_APPS = [
 'django.contrib.contenttypes',
@@ -49,11 +53,37 @@ INSTALLED_APPS = [
 'django.contrib.auth',
 'django.contrib.sessions',
 'django.contrib.messages',
+'django.contrib.sites',
 'django.contrib.staticfiles',
 'rest_framework',
 'rest_framework.authtoken',
+'rest_auth',
+'allauth',
+'allauth.account',
+'rest_auth.registration',
+'allauth.socialaccount',
+'allauth.socialaccount.providers.facebook',
+'allauth.socialaccount.providers.google',
 'api',
 ]
+
+
+# Provider specific settings
+SOCIALACCOUNT_PROVIDERS = {
+    'facebook': {
+        # For each OAuth based provider, either add a ``SocialApp``
+        # (``socialaccount`` app) containing the required client
+        # credentials, or list them here:
+        'APP': {
+            'client_id': '329679158218337',
+            'secret': 'f63d610c89c1317fdea68c13ebf493ce',
+            'key': ''
+        }
+    }
+}
+
+
+SITE_ID = 1
 
 
 MIDDLEWARE = [

@@ -9,6 +9,7 @@ router.register('profile', ProfileViewSet)
 router.register('recovery', RecoveryViewSet)
 router.register('loan/add', AddLoanViewSet)
 
+
 urlpatterns = [
     path('', include(router.urls)),
 ]
