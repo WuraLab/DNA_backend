@@ -131,6 +131,126 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+class RecoveryViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all() #used by serializers output
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (AllowAny,)
+    versions =['v1']
+
+     # pylint: disable=R0201
+    def update(self, request, *args, **kwargs):
+        response = {'message': 'You cant edit your Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+     # pylint: disable=R0201
+    def list(self, request, *args, **kwargs):
+        response = {'message': 'You cant create Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+     # pylint: disable=R0201
+    def destroy(self, request,  *args, **kwargs):
+        response = {'message': 'You cant delete Profile like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    # pylint: disable=R0201
+    def retrieve(self, request, pk=None,  *args, **kwargs):
+        response = {'message': 'You cant retrieve users Profile like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+    def create(self, request, version="v1", *args, **kwargs):
+    # check if the version argument exists in the versions list
+        if version in self.versions:
+            if request.data :
+                fetched_data =  request.data
+                email= fetched_data['email']
+                try :
+                #    check in fetch email exits
+                    user = User.objects.get(email=email)
+                    # create jwt token
+                    secret = os.getenv("SECRETKEY")
+                    # minutes=1
+                    dt = datetime.now() + timedelta(minutes=1)
+                    encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
+                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
+
+                    # send an e-mail to the user
+                    context = {
+                         'user': user,
+                         'reset_link': reset_link
+                    }
+                    print(reset_link)
+                    msg_plain = render_to_string('../templates/password_reset_email.txt', context)
+                    msg_html = render_to_string('../templates/password_reset_email.html', context)
+
+                    subject = 'Debt notification account recovery request.'
+                    from_email = settings.EMAIL_HOST_USER
+                    message = msg_plain
+                    recipient_list = [email]
+
+                    send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=msg_html)
+
+                    response= {'token': 'email sent!'}
+                    return Response(response, status=status.HTTP_200_OK)
+                except User.DoesNotExist:
+                    response = {'message': 'No user associated with this email exits!'}
+                    return Response(response, status=status.HTTP_404_NOT_FOUND)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['POST'])
+    def validate_token(self,request, version="v1"):
+        if version in self.versions:
+            if request.data :
+                fetched_data =request.data
+                encoded_token= fetched_data['token']
+                try:
+                        secret = os.getenv("SECRETKEY")
+                        jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
+                        response= {'message': 'Token is still valid and active :)'}
+                        return Response(response, status=status.HTTP_200_OK)
+                except jwt.ExpiredSignatureError:
+                        response= {'message': 'Token expired. Get new one'}
+                        return Response(response, status=status.HTTP_200_OK)
+                except jwt.InvalidTokenError:
+                        response= {'message': 'Invalid Token'}
+                        return Response(response, status=status.HTTP_200_OK)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['POST'])
+    def confirm(self,request, version="v1"):
+        if version in self.versions:
+            if request.data :
+                try:
+                    # user token and password
+                    fetched_data =request.data
+                    encoded_token= fetched_data['token']
+                    new_password = fetched_data['password']
+
+                    secret = os.getenv("SECRETKEY")
+                    decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
+                    email = decode_token['email']
+
+                    # modify existing user
+                    user = User.objects.get(email=email)
+
+                    user.set_password(new_password)
+                    user.save()
+                    response = {'success': 'Password reset was successful!'}
+                    return Response(response, status=status.HTTP_200_OK)
+
+                except jwt.InvalidTokenError:
+                    response= {'message': 'Invalid Token'}
+                    return Response(response, status=status.HTTP_200_OK)
+                except User.DoesNotExist:
+                    response = {'message': 'No user associated with this email exits!'}
+                    return Response(response, status=status.HTTP_200_OK)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 class RecoveryViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all() #used by serializers output
