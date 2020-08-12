@@ -83,7 +83,7 @@ MIDDLEWARE = [
 ]
 
 CORS_ORIGIN_WHITELIST = [
-    "http://localhost:3000", "", ""
+    "http://localhost:3000", "",
 ]
 
 ROOT_URLCONF = 'DNA.urls'
@@ -116,10 +116,24 @@ EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
+
+
+if DEBUG == True:  #Use SQlite locally
+   DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+    }
+}
+else: #Use Postgress in Production
+    DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbhcserc6q8n5g',
+        'HOST': 'ec2-34-224-229-81.compute-1.amazonaws.com',
+        'PORT': 5432,
+        'USER': 'txhgvqikfbeubt',
+        'PASSWORD':'03740e38ebc415692ab48c8c41bc2eae79c70c510a8f818ddeb0032607b5013e'
     }
 }
 
