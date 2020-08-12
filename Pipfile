@@ -12,6 +12,7 @@ pylint-django = "*"
 gunicorn = "*"
 django-heroku = "*"
 psycopg2 = "==2.7.5"
+python-decouple = "*"
 
 [requires]
 python_version = "3.6"
