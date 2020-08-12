@@ -19,7 +19,7 @@ import dj_database_url
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
+SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
 SECRET_KEY = config('SECRETKEY')
 DEBUG = config("DEBUG")
 
