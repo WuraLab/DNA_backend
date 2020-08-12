@@ -9,6 +9,7 @@ verify_ssl = true
 django = "*"
 djangorestframework = "*"
 pylint-django = "*"
+gunicorn = "*"
 
 [requires]
 python_version = "3.6"
