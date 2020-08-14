@@ -24,7 +24,6 @@ class Loan_Record(models.Model):
     created=models.DateField(auto_now_add=True)
     amount=models.CharField(max_length=200)
     interest_rate=models.DecimalField(max_digits=5, decimal_places=2,)
-    interest_rate=models.DecimalField(max_digits=5, decimal_places=2,)
     paid=models.BooleanField(default=False)
     lender=models.BooleanField(default=True)
     description=models.TextField()

@@ -9,7 +9,7 @@ from rest_framework.generics import UpdateAPIView
 
 
 from .models import Profile,Loan_Record
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer,UpdateLoanSerializer
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt

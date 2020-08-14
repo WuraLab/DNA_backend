@@ -47,17 +47,3 @@ class AddLoanSerializer(serializers.ModelSerializer):
         model=Loan_Record
         fields=('id','user','amount','interest_rate','description','balance_to_pay',"due_date")
 
-
-    def update(self, instance, validated_data):
-        instance.amount = validated_data.get('amount', instance.amount)
-        instance.description = validated_data.get('description', instance.description)
-        instance.interest_rate = validated_data.get('interest_rate', instance.interest_rate)
-        instance.save()
-        return instance
-
-class UpdateLoanSerializer(serializers.ModelSerializer):
-    #AddLoan  api data formaterr.
-    class Meta:   #pylint: disable=too-few-public-methods
-        #Return optional model loan record
-        model=Loan_Record
-        fields=('amount','interest_rate','description','balance_to_pay')
