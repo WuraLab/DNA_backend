@@ -5,7 +5,6 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.generics import UpdateAPIView
 
 
 from .models import Profile,Loan_Record
@@ -21,7 +20,6 @@ from django.core.mail import send_mail
 from django.template.loader import render_to_string
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
-from rest_framework.decorators import api_view
 
 
 
