@@ -5,6 +5,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token
 from .models import Profile ,Loan_Record
 
+
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
     class Meta:  #pylint: disable=too-few-public-methods
@@ -38,9 +39,25 @@ class EditProfileSerilizer(serializers.ModelSerializer):
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile',)
 
+
 class AddLoanSerializer(serializers.ModelSerializer):
     #AddLoan  api data formaterr.
     class Meta:   #pylint: disable=too-few-public-methods
         #Return optional model loan record
         model=Loan_Record
         fields=('id','user','amount','interest_rate','description','balance_to_pay',"due_date")
+
+
+    def update(self, instance, validated_data):
+        instance.amount = validated_data.get('amount', instance.amount)
+        instance.description = validated_data.get('description', instance.description)
+        instance.interest_rate = validated_data.get('interest_rate', instance.interest_rate)
+        instance.save()
+        return instance
+
+class UpdateLoanSerializer(serializers.ModelSerializer):
+    #AddLoan  api data formaterr.
+    class Meta:   #pylint: disable=too-few-public-methods
+        #Return optional model loan record
+        model=Loan_Record
+        fields=('amount','interest_rate','description','balance_to_pay')
