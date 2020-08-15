@@ -76,7 +76,6 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-
 SITE_ID = 1
 
 
