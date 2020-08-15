@@ -386,7 +386,7 @@ class AddLoanViewSet(viewsets.ModelViewSet):
     serializer_class =AddLoanSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
-    versions = ['v1', 'v2', 'v3']
+    versions = ['v1']
 
     #this option is used to authenticate a user, thus django can identify the token and its owner
     def create(self, request, *args, **kwargs):
