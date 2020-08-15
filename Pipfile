@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-django = "==3.1"
 djangorestframework = "==3.11.1"
 pylint-django = "==2.3.0"
 gunicorn = "==20.0.4"
@@ -29,11 +28,9 @@ lazy-object-proxy = "==1.4.3"
 lockfile = "==0.12.2"
 mccabe = "==0.6.1"
 oauthlib = "==3.1.0"
-pillow = "==7.2.0"
 psycopg2-binary = "==2.8.5"
 pycparser = "==2.20"
 pydotenv = "==0.0.7"
-pyjwt = "==1.7.1"
 pylint = "==2.5.3"
 pylint-plugin-utils = "==0.6"
 python-dotenv = "==0.14.0"
@@ -48,6 +45,9 @@ typed-ast = "==1.4.1"
 urllib3 = "==1.25.10"
 whitenoise = "==5.2.0"
 wrapt = "==1.12.1"
+Django = "==3.1"
+Pillow = "==7.2.0"
+PyJWT = "==1.7.1"
 
 [requires]
 python_version = "3.6"
