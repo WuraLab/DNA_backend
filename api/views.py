@@ -381,7 +381,6 @@ class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
 
-
 class AddLoanViewSet(viewsets.ModelViewSet):
     queryset = Loan_Record.objects.all()
     serializer_class =AddLoanSerializer
