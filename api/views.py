@@ -6,7 +6,7 @@ from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
 
 from .models import Profile,Loan_Record
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,AddLoanSerializer
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
@@ -381,16 +381,41 @@ class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
 
-class AddLoanViewSet(viewsets.ModelViewSet):
+class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan_Record.objects.all()
-    serializer_class =AddLoanSerializer
+    serializer_class =LoanSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
 
     #this option is used to authenticate a user, thus django can identify the token and its owner
-    def create(self, request, *args, **kwargs):
-            request.data._mutable = True
+    def create(self, request, version="v1", *args, **kwargs):
+        if version in self.versions:
+            #for now the interest is flat, for personal loan tracker
+            request.data['balance_to_pay'] = int(request.data['interest_rate'])/100  * int(request.data['amount']) + int(request.data['amount'])
             request.data.update({'user': request.user.id})
 
-            return super(AddLoanViewSet, self).create(request, *args, **kwargs)
+            return super(LoanViewSet, self).create(request, *args, **kwargs)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    # this function is used to update loan records of a user
+    def list(self, request, version="v1", *args, **kwargs):
+        if version in self.versions:
+             if request.user:
+                    try:
+                        user = request.user
+                        loan_Record = Loan_Record.objects.filter(user=user.id)
+                        serializer = LoanSerializer(loan_Record, many=True)
+                        response = {'message': 'User loan Records ', 'result': serializer.data}
+                        return Response(response, status=status.HTTP_200_OK)
+                    except IndexError:
+                        response = {'message':  f' Hi 👋 {user.username}, you have no loan records yet 😔.'}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                    except :
+                        response = {'message': 'User not Authenticated! '}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)

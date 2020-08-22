@@ -38,7 +38,7 @@ class EditProfileSerilizer(serializers.ModelSerializer):
         model = Profile
         fields = ('id', 'facebook_user', 'phone', 'profile',)
 
-class AddLoanSerializer(serializers.ModelSerializer):
+class LoanSerializer(serializers.ModelSerializer):
     #AddLoan  api data formaterr.
     class Meta:   #pylint: disable=too-few-public-methods
         #Return optional model loan record
