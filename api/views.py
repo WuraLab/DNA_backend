@@ -413,7 +413,7 @@ class LoanViewSet(viewsets.ModelViewSet):
                     except IndexError:
                         response = {'message':  f' Hi 👋 {user.username}, you have no loan records yet 😔.'}
                         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                    except :
+                    except :# pylint: disable=W0702
                         response = {'message': 'User not Authenticated! '}
                         return Response(response, status=status.HTTP_400_BAD_REQUEST)
         else:
