@@ -1,5 +1,4 @@
 from allauth.socialaccount.adapter import get_adapter
-# from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django.contrib.auth.models import User
@@ -17,7 +16,9 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.core.mail import send_mail
 from django.template.loader import render_to_string
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
 
 
@@ -376,13 +377,16 @@ class RecoveryViewSet(viewsets.ModelViewSet):
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
 
+class GoogleLogin(SocialLoginView):
+    adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
 
 class AddLoanViewSet(viewsets.ModelViewSet):
     queryset = Loan_Record.objects.all()
     serializer_class =AddLoanSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
-    versions = ['v1', 'v2', 'v3']
+    versions = ['v1']
 
     #this option is used to authenticate a user, thus django can identify the token and its owner
     def create(self, request, *args, **kwargs):
