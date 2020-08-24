@@ -31,16 +31,6 @@ class Loan_Record(models.Model):
 
 
 
-    def create(self, *args, **kwargs):
-      #the interest is gotten by interest/year * amount
-      if self.interest_rate ==0:
-        super(Loan_Record, self).save(*args, **kwargs)
-        return self.amount
-      else:
-        self.interest_rate = self.interest_rate/12  * int(self.amount)
-        super(Loan_Record, self).save(*args, **kwargs)
-
-
 
     def __str__(self):
        """one-line docstring for representing the L object."""
