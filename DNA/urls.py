@@ -8,7 +8,7 @@ from api.views import  FacebookLogin, GoogleLogin
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/<version>/', include('api.urls')),
-    path('api/<version>/login/', obtain_auth_token),
+    path('api/login/', obtain_auth_token),
     path('api/<version>/rest-auth/', include('rest_auth.urls')),
     path('api/<version>/rest-auth/facebook/', FacebookLogin.as_view(), name='fb_login'),
     path('api/<version>/rest-auth/google/', GoogleLogin.as_view(), name='google_login'),
