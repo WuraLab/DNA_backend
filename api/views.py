@@ -423,7 +423,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-    
+
 
     # this function is used to update loan records of a user
     def list(self, request, version="v1", *args, **kwargs):
