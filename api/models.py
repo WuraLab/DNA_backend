@@ -20,9 +20,9 @@ class Profile(models.Model):
 
 class Loan_Record(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='record')
-    due_date=models.DateField(blank=True, null=True)
+    due_date=models.DateField()
     created=models.DateField(auto_now_add=True)
-    amount=models.CharField(max_length=200)
+    amount=models.IntegerField()
     interest_rate=models.DecimalField(max_digits=5, decimal_places=2,)
     paid=models.BooleanField(default=False)
     lender=models.BooleanField(default=True)

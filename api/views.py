@@ -390,12 +390,17 @@ class LoanViewSet(viewsets.ModelViewSet):
 
     #this option is used to authenticate a user, thus django can identify the token and its owner
     def create(self, request, version="v1", *args, **kwargs):
-        if version in self.versions:
+        if version in self.versions :
             #for now the interest is flat, for personal loan tracker
-            request.data['balance_to_pay'] = int(request.data['interest_rate'])/100  * int(request.data['amount']) + int(request.data['amount'])
-            request.data.update({'user': request.user.id})
+            if request.data :
+                percentage = int(request.data['interest_rate'])/100
+                amount = int(request.data['amount'])
+                request.data['balance_to_pay'] =  (percentage * amount) + amount
+                #update the request data with user id in runtime
+                request.data.update({'user': request.user.id})
 
             return super(LoanViewSet, self).create(request, *args, **kwargs)
+
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
