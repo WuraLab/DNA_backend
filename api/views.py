@@ -417,7 +417,7 @@ class LoanViewSet(viewsets.ModelViewSet):
                 #update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
-            return super(LoanViewSet, self).create(request, *args, **kwargs)
+            return super(LoanViewSet, self).update(request, *args, **kwargs)
 
         else:
             response = {'message': 'API version not identified!'}
