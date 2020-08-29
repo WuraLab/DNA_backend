@@ -1,1 +1,1 @@
-web:web: gunicorn DNA.wsgi
+web: gunicorn DNA.wsgi
