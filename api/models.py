@@ -23,7 +23,7 @@ class Loan_Record(models.Model):
     due_date=models.DateField()
     created=models.DateField(auto_now_add=True)
     amount=models.IntegerField()
-    interest_rate=models.DecimalField(max_digits=5, decimal_places=2,)
+    interest_rate=models.CharField(max_length=10 , blank=True,null=True)
     paid=models.BooleanField(default=False)
     lender=models.BooleanField(default=True)
     description=models.TextField()
@@ -35,5 +35,3 @@ class Loan_Record(models.Model):
     def __str__(self):
        """one-line docstring for representing the L object."""
        return self.description
-
-
