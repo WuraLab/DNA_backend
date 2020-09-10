@@ -118,7 +118,8 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 user = request.user
                 try :
                      profile = Profile.objects.filter(user=user.id)
-                     profile.update(facebook_user=fetched_data['facebook_user'],
+                     profile.update(
+                                    facebook_user=fetched_data['facebook_user'],
                                     phone=fetched_data['phone'],
                                     profile=fetched_data['profile'])
                                     
