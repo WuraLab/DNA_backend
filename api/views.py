@@ -173,7 +173,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # create jwt token
                     secret = os.getenv("SECRETKEY")
                     # minutes=1
-                    dt = datetime.now() + timedelta(minutes=1)
+                    dt = datetime.now() + timedelta(minutes=5)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
                     reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
