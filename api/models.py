@@ -7,7 +7,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=False, blank=False, unique=True,
                                 related_name = 'user')
     facebook_user = models.CharField(max_length=250, blank=True, null=True, unique=True )
-    phone = models.CharField( blank=True, unique=True, null=True, max_length=19)
+    phone = models.CharField( blank=True, unique=True, null=True, max_length=20)
     profile = models.CharField(max_length=250, blank=True, null=True, unique=True )
 
 
