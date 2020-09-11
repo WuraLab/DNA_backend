@@ -122,7 +122,6 @@ class ProfileViewSet(viewsets.ModelViewSet):
                                     facebook_user=fetched_data['facebook_user'],
                                     phone=fetched_data['phone'],
                                     profile=fetched_data['profile'])
-                                    
                      get_profile = Profile.objects.get(user=user.id)
                      serializer = EditProfileSerilizer(get_profile, many=False)
                      response = {'message': 'User profile  Updated', 'result': serializer.data}
