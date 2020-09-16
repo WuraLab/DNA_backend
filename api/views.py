@@ -109,24 +109,25 @@ class ProfileViewSet(viewsets.ModelViewSet):
 
     # write a custom method that uses the authToken for access privileges
     # pylint: disable=R0201
-    @action(detail=True, methods=['PUT'])
-    def update_profile(self, request, version="v1", pk=None,):
+    @action(detail=False, methods=['PUT'])
+    def update_profile(self, request, version="v1"):
         # check if the version argument exists in the versions list
         if version in self.versions:
             if request.data :
                 fetched_data =  request.data
                 user = request.user
                 try :
-                     profile = Profile.objects.filter(user=user.id, id=pk )
-                     profile.update(facebook_user=fetched_data['facebook_user'],
+                     profile = Profile.objects.filter(user=user.id)
+                     profile.update(
+                                    facebook_user=fetched_data['facebook_user'],
                                     phone=fetched_data['phone'],
-                                    profile=request.FILES.get('profile'))
-                     get_profile = Profile.objects.get(user=user.id, id=pk)
+                                    profile=fetched_data['profile'])
+                     get_profile = Profile.objects.get(user=user.id)
                      serializer = EditProfileSerilizer(get_profile, many=False)
                      response = {'message': 'User profile  Updated', 'result': serializer.data}
                      return Response(response, status=status.HTTP_200_OK)
 
-                except IndexError :
+                except Profile.DoesNotExist:
                     response = {'message': 'user profile does not exit'}
                     return Response(response, status=status.HTTP_200_OK)
         else:
@@ -171,7 +172,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # create jwt token
                     secret = os.getenv("SECRETKEY")
                     # minutes=1
-                    dt = datetime.now() + timedelta(minutes=1)
+                    dt = datetime.now() + timedelta(minutes=5)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
                     reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
