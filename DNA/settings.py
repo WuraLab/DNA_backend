@@ -151,11 +151,11 @@ else: #Use Postgress in Production
     DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dbhcserc6q8n5g',
-        'HOST': 'ec2-34-224-229-81.compute-1.amazonaws.com',
+        'NAME': 'de96gid1qctfhk',
+        'HOST': 'ec2-52-87-22-151.compute-1.amazonaws.com',
         'PORT': 5432,
-        'USER': 'txhgvqikfbeubt',
-        'PASSWORD':'03740e38ebc415692ab48c8c41bc2eae79c70c510a8f818ddeb0032607b5013e'
+        'USER': 'yhjdosravaanwi',
+        'PASSWORD':'82d6d4dc2877baed97085dbdeae8a66cbbadb366312b2a1766fb35d7aac8ed42'
     }
 }
 
