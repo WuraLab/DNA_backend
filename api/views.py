@@ -11,6 +11,7 @@ from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditP
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
+from decouple import config
 from datetime import datetime, timedelta
 # favour django-mailer but fall back to django.core.mail
 from django.conf import settings
@@ -20,6 +21,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
+
+
 
 
 
@@ -170,7 +173,8 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 #    check in fetch email exits
                     user = User.objects.get(email=email)
                     # create jwt token
-                    secret = os.getenv("SECRETKEY")
+                    secret = config('SECRET_KEY')
+                    print(secret)
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=5)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
@@ -289,9 +293,9 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 email= fetched_data['email']
                 try :
                 #    check in fetch email exits
-                    user = User.objects.get(email=email)
+                    user = User.objects.get(email= email)
                     # create jwt token
-                    secret = os.getenv("SECRETKEY")
+                    secret = config("SECRET_KEY")
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=1)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
