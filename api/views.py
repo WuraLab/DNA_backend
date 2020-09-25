@@ -25,8 +25,6 @@ from rest_auth.registration.views import SocialLoginView
 
 
 
-
-
 # from rest_framework.parsers import FileUploadParser
 
 #login was
@@ -178,7 +176,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=5)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
-                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
+                    reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
                     # send an e-mail to the user
                     context = {
@@ -212,7 +210,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 fetched_data =request.data
                 encoded_token= fetched_data['token']
                 try:
-                        secret = os.getenv("SECRETKEY")
+                        secret = config("SECRETKEY")
                         jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                         response= {'message': 'Token is still valid and active :)'}
                         return Response(response, status=status.HTTP_200_OK)
@@ -236,7 +234,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     encoded_token= fetched_data['token']
                     new_password = fetched_data['password']
 
-                    secret = os.getenv("SECRETKEY")
+                    secret = config("SECRETKEY")
                     decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
 
@@ -299,14 +297,14 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=1)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
-                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
+                    reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
                     # send an e-mail to the user
                     context = {
                          'user': user,
                          'reset_link': reset_link
                     }
-                    print(reset_link)
+                    # print(reset_link)
                     msg_plain = render_to_string('../templates/password_reset_email.txt', context)
                     msg_html = render_to_string('../templates/password_reset_email.html', context)
 
@@ -333,7 +331,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 fetched_data =request.data
                 encoded_token= fetched_data['token']
                 try:
-                        secret = os.getenv("SECRETKEY")
+                        secret = config("SECRET_KEY")
                         jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                         response= {'message': 'Token is still valid and active :)'}
                         return Response(response, status=status.HTTP_200_OK)
@@ -357,7 +355,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     encoded_token= fetched_data['token']
                     new_password = fetched_data['password']
 
-                    secret = os.getenv("SECRETKEY")
+                    secret = config("SECRET_KEY")
                     decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
 
@@ -405,7 +403,11 @@ class LoanViewSet(viewsets.ModelViewSet):
                 #update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
-            return super(LoanViewSet, self).create(request, *args, **kwargs)
+                return super(LoanViewSet, self).create(request, *args, **kwargs)
+
+            else:
+                response = {'message': 'Please check and make sure all fields are not empty.'}
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         else:
             response = {'message': 'API version not identified!'}
