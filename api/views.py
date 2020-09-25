@@ -4,9 +4,9 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-
+from rest_framework.views import APIView
 from .models import Profile,Loan_Record
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
@@ -407,22 +407,34 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, version="v1", *args, **kwargs):
-        if version in self.versions :
-            #for now the interest is flat, for personal loan tracker
-            if request.data :
-                request.data._mutable = True
-                percentage = int(request.data['interest_rate'])/100
-                amount = int(request.data['amount'])
-                request.data['balance_to_pay'] =  (percentage * amount) + amount
-                #update the request data with user id in runtime
-                request.data.update({'user': request.user.id})
 
-            return super(LoanViewSet, self).update(request, *args, **kwargs)
 
-        else:
-            response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    @action(detail=False, methods=['PUT'])
+    def update_loan(self, request, version="v1", *args, **kwargs):
+            if version in self.versions:
+               if request.data :
+                fetched_data =  request.data
+                user = request.user
+                try :
+                     profile = Loan_Record.objects.filter(user=user.id)
+                     profile.update(
+                                    amount=fetched_data['amount'],
+                                    interest_rate=fetched_data['interest_rate'],
+                                    due_date=fetched_data['due_date'],
+                                    balance_to_pay=fetched_data['balance_to_pay'],
+                                    description=fetched_data['description'],
+                                    )
+                     get_profile = Loan_Record.objects.get(user=user.id)
+                     serializer = EditLoanProfileSerilizer(get_profile, many=False)
+                     response = {'message': 'Loan   Updated', 'result': serializer.data}
+                     return Response(response, status=status.HTTP_200_OK)
+
+                except Loan_Record.DoesNotExist:
+                    response = {'message': 'Loan does not exit'}
+                    return Response(response,status=status.HTTP_404_NOT_FOUND)
+            else:
+                response = {'message': 'API version not identified!'}
+                return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -445,3 +457,19 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteAccount(viewsets.ModelViewSet):
+
+    queryset=User.objects.all()
+    serializer_class=DeleteAccountSerializer
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'email'
+
+    def delete(self, request, pk=None, **kwargs):
+
+        request.user.delete()
+
+        response = {'message': 'User has been Deleted successfully'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
