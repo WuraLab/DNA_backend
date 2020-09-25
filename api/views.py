@@ -409,32 +409,22 @@ class LoanViewSet(viewsets.ModelViewSet):
 
 
 
-    @action(detail=False, methods=['PUT'])
-    def update_loan(self, request, version="v1", *args, **kwargs):
-            if version in self.versions:
-               if request.data :
-                fetched_data =  request.data
-                user = request.user
-                try :
-                     profile = Loan_Record.objects.filter(user=user.id)
-                     profile.update(
-                                    amount=fetched_data['amount'],
-                                    interest_rate=fetched_data['interest_rate'],
-                                    due_date=fetched_data['due_date'],
-                                    balance_to_pay=fetched_data['balance_to_pay'],
-                                    description=fetched_data['description'],
-                                    )
-                     get_profile = Loan_Record.objects.get(user=user.id)
-                     serializer = EditLoanProfileSerilizer(get_profile, many=False)
-                     response = {'message': 'Loan   Updated', 'result': serializer.data}
-                     return Response(response, status=status.HTTP_200_OK)
+    def update(self, request, version="v1", *args, **kwargs):
+        if version in self.versions :
+            #for now the interest is flat, for personal loan tracker
+            if request.data :
+                request.data._mutable = True
+                percentage = int(request.data['interest_rate'])/100
+                amount = int(request.data['amount'])
+                request.data['balance_to_pay'] =  (percentage * amount) + amount
+                #update the request data with user id in runtime
+                request.data.update({'user': request.user.id})
 
-                except Loan_Record.DoesNotExist:
-                    response = {'message': 'Loan does not exit'}
-                    return Response(response,status=status.HTTP_404_NOT_FOUND)
-            else:
-                response = {'message': 'API version not identified!'}
-                return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            return super(LoanViewSet, self).update(request, *args, **kwargs)
+
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 
