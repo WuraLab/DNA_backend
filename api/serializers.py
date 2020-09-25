@@ -55,6 +55,8 @@ class  EditLoanProfileSerilizer(serializers.ModelSerializer):
 
 
 class DeleteAccountSerializer(serializers.ModelSerializer):
-        class Meta:
+        #AddLoan  api data formaterr.
+        class Meta:  #pylint: disable=too-few-public-methods
+            #Return optional model loan record
             model=User
             fields= '__all__'

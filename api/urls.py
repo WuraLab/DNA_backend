@@ -2,7 +2,6 @@ from django.urls import path
 from rest_framework import routers
 from django.conf.urls import include
 from .views import UserViewSet, ProfileViewSet, RecoveryViewSet, LoanViewSet ,DeleteAccount
-from . import views
 
 
 

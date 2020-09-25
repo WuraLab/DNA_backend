@@ -4,7 +4,6 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.views import APIView
 from .models import Profile,Loan_Record
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer
 
@@ -458,8 +457,6 @@ class DeleteAccount(viewsets.ModelViewSet):
     lookup_field = 'email'
 
     def delete(self, request, pk=None, **kwargs):
-
         request.user.delete()
-
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
