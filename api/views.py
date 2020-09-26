@@ -126,7 +126,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
                      get_profile = Profile.objects.get(user=user.id)
                      serializer = EditProfileSerilizer(get_profile, many=False)
                      response = {'message': 'User profile  Updated', 'result': serializer.data}
-                     return Response(response, status=status.HTTP_200_OK)
+                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
                 except Profile.DoesNotExist:
                     response = {'message': 'user profile does not exit'}
@@ -295,7 +295,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     # create jwt token
                     secret = config("SECRET_KEY")
                     # minutes=1
-                    dt = datetime.now() + timedelta(minutes=1)
+                    dt = datetime.now() + timedelta(minutes=10)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
                     reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
@@ -337,10 +337,10 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                         return Response(response, status=status.HTTP_200_OK)
                 except jwt.ExpiredSignatureError:
                         response= {'message': 'Token expired. Get new one'}
-                        return Response(response, status=status.HTTP_200_OK)
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
                 except jwt.InvalidTokenError:
                         response= {'message': 'Invalid Token'}
-                        return Response(response, status=status.HTTP_200_OK)
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -369,10 +369,10 @@ class RecoveryViewSet(viewsets.ModelViewSet):
 
                 except jwt.InvalidTokenError:
                     response= {'message': 'Invalid Token'}
-                    return Response(response, status=status.HTTP_200_OK)
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
                 except User.DoesNotExist:
                     response = {'message': 'No user associated with this email exits!'}
-                    return Response(response, status=status.HTTP_200_OK)
+                    return Response(response, status=status.HTTP_404_NOT_FOUND)
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
