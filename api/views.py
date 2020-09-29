@@ -360,7 +360,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     user = User.objects.get(email=email)
 
                     user.set_password(new_password)
-                 -   user.save()
+                    user.save()
                     response = {'success': 'Password reset was successful!'}
                     return Response(response, status=status.HTTP_200_OK)
 
