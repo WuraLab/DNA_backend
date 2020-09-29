@@ -4,9 +4,8 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-
 from .models import Profile,Loan_Record
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
@@ -391,7 +390,6 @@ class LoanViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
 
-    #this option is used to authenticate a user, thus django can identify the token and its owner
     def create(self, request, version="v1", *args, **kwargs):
         if version in self.versions :
             #for now the interest is flat, for personal loan tracker
@@ -417,7 +415,6 @@ class LoanViewSet(viewsets.ModelViewSet):
         if version in self.versions :
             #for now the interest is flat, for personal loan tracker
             if request.data :
-                request.data._mutable = True
                 percentage = int(request.data['interest_rate'])/100
                 amount = int(request.data['amount'])
                 request.data['balance_to_pay'] =  (percentage * amount) + amount
@@ -429,6 +426,10 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+    #    def destroy(self, request, pk=None):
+
 
 
 
@@ -451,3 +452,18 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteAccount(viewsets.ModelViewSet):
+
+    queryset=User.objects.all()
+    serializer_class=DeleteAccountSerializer
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'email'
+
+    #  pylint: disable=R0201
+    def destroy(self, request, pk=None, **kwargs):
+        request.user.destory()
+        response = {'message': 'User has been Deleted successfully'}
+        return Response(response, status=status.HTTP_204_NO_CONTEN)
