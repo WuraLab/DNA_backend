@@ -360,7 +360,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     user = User.objects.get(email=email)
 
                     user.set_password(new_password)
-                    user.save()
+                 -   user.save()
                     response = {'success': 'Password reset was successful!'}
                     return Response(response, status=status.HTTP_200_OK)
 
@@ -394,9 +394,9 @@ class LoanViewSet(viewsets.ModelViewSet):
             #for now the interest is flat, for personal loan tracker
             if request.data :
                 request.data._mutable = True
-                percentage = int(request.data['interest_rate'])/100
+                -
                 amount = int(request.data['amount'])
-                request.data['balance_to_pay'] =  (percentage * amount) + amount
+                request.data['balance_to_pay'] =  (int(request.data['interest_rate'])/100 * amount) + amount
                 #update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
