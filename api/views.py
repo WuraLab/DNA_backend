@@ -394,9 +394,8 @@ class LoanViewSet(viewsets.ModelViewSet):
             #for now the interest is flat, for personal loan tracker
             if request.data :
                 # request.data._mutable = True
-                percentage = int(request.data['interest_rate'])/100
                 amount = int(request.data['amount'])
-                request.data['balance_to_pay'] =  (percentage * amount) + amount
+                request.data['balance_to_pay'] =  (int(request.data['interest_rate'])/100 * amount) + amount
                 #update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
@@ -404,7 +403,9 @@ class LoanViewSet(viewsets.ModelViewSet):
 
         else:
             response = {'message': 'API version not identified!'}
-            return Respons
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
 
     def update(self, request, version="v1", *args, **kwargs):
         if version in self.versions :
@@ -421,6 +422,10 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+    #    def destroy(self, request, pk=None):
+
 
 
 
@@ -453,6 +458,7 @@ class DeleteAccount(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     lookup_field = 'email'
 
+    # @action(detail=False, methods=['DELETE'])
     def delete(self, request, pk=None, **kwargs):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
