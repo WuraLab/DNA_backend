@@ -20,7 +20,6 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
-from django.shortcuts import redirect
 
 
 
@@ -386,7 +385,7 @@ class GoogleLogin(SocialLoginView):
 
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan_Record.objects.all()
-    serializer_class =LoanSerializer
+    serializer_class= LoanSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
@@ -447,12 +446,12 @@ class LoanViewSet(viewsets.ModelViewSet):
                     except IndexError:
                         response = {'message':  f' Hi 👋 {user.username}, you have no loan records yet 😔.'}
                         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                    except :# pylint: disable=W0702
-                        response = {'message': 'User not Authenticated! '}
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 class DeleteAccount(viewsets.ModelViewSet):
@@ -465,6 +464,6 @@ class DeleteAccount(viewsets.ModelViewSet):
 
     #  pylint: disable=R0201
     def delete(self, request, pk=None, **kwargs):
-        response = redirect('/login')
-        return response
-        
+        request.user.delete()
+        response = {'message': 'User has been Deleted successfully'}
+        return Response(response, status=status.HTTP_204_NO_CONTENT)
