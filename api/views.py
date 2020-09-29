@@ -460,8 +460,8 @@ class DeleteAccount(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     lookup_field = 'email'
 
-    # @action(detail=False, methods=['DELETE'])
+    #  pylint: disable=R0201
     def destroy(self, request, pk=None, **kwargs):
-        request.user.delete()
+        request.user.destory()
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTEN)
