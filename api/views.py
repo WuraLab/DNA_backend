@@ -394,7 +394,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             #for now the interest is flat, for personal loan tracker
             if request.data :
                 request.data._mutable = True
-                -
+                
                 amount = int(request.data['amount'])
                 request.data['balance_to_pay'] =  (int(request.data['interest_rate'])/100 * amount) + amount
                 #update the request data with user id in runtime
