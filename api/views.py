@@ -461,7 +461,7 @@ class DeleteAccount(viewsets.ModelViewSet):
     lookup_field = 'email'
 
     # @action(detail=False, methods=['DELETE'])
-    def delete(self, request, pk=None, **kwargs):
+    def destroy(self, request, pk=None, **kwargs):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTEN)
