@@ -464,4 +464,4 @@ class DeleteAccount(viewsets.ModelViewSet):
     def delete(self, request, pk=None, **kwargs):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+        return Response(response, status=status.HTTP_204_NO_CONTEN)
