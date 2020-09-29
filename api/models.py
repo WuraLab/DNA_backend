@@ -19,15 +19,22 @@ class Profile(models.Model):
 
 
 class Loan_Record(models.Model):
+    loan_record = (
+        ('Full Paid', 'Full Paid'),
+        ('Given', 'Given'),
+        ('In Progress', 'In Progress'),
+    )
     user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='record')
+    name=models.CharField(max_length=200)
+    loan_category=models.CharField(max_length=100, choices=loan_record)
     due_date=models.DateField()
-    created=models.DateField(auto_now_add=True)
+    created=models.DateTimeField(auto_now_add=True)
     amount=models.IntegerField()
-    interest_rate=models.CharField(max_length=10 , blank=True,null=True)
+    interest_rate=models.CharField(max_length=10)
     paid=models.BooleanField(default=False)
     lender=models.BooleanField(default=True)
     description=models.TextField()
-    balance_to_pay=models.IntegerField(blank=True,null=True)
+    balance_to_pay=models.DecimalField(max_digits=15, decimal_places=2 , blank=True,null=True)
 
 
 
