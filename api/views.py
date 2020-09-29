@@ -19,6 +19,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
+from django.shortcuts import redirect
 
 
 
@@ -461,7 +462,7 @@ class DeleteAccount(viewsets.ModelViewSet):
     lookup_field = 'email'
 
     #  pylint: disable=R0201
-    def destroy(self, request, pk=None, **kwargs):
-        request.user.destory()
-        response = {'message': 'User has been Deleted successfully'}
-        return Response(response, status=status.HTTP_204_NO_CONTEN)
+    def delete(self, request, pk=None, **kwargs):
+        response = redirect('/login')
+        return response
+        
