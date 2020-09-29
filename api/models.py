@@ -27,7 +27,7 @@ class Loan_Record(models.Model):
     user=models.ForeignKey(User, on_delete=models.CASCADE, related_name='record')
     name=models.CharField(max_length=200)
     loan_category=models.CharField(max_length=100, choices=loan_record)
-    due_date=models.DateField()
+    due_date=models.DateTimeField()
     created=models.DateTimeField(auto_now_add=True)
     amount=models.IntegerField()
     interest_rate=models.CharField(max_length=10)
