@@ -162,7 +162,8 @@ else: #Use Postgress in Production
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+     'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'profile')

@@ -394,10 +394,16 @@ class LoanViewSet(viewsets.ModelViewSet):
         if version in self.versions :
             #for now the interest is flat, for personal loan tracker
             if request.data :
-                # request.data._mutable = True
-                percentage = int(request.data['interest_rate'])/100
-                amount = int(request.data['amount'])
-                request.data['balance_to_pay'] =  (percentage * amount) + amount
+                request.data._mutable = True
+                if 'interest_rate' and 'amount' in request.data :
+
+                    percentage = int(request.data['interest_rate'])/100
+                    amount = int(request.data['amount'])
+                    request.data['balance_to_pay'] =  (percentage * amount) + amount
+                else:
+                     response = {'message': 'Please check if the amount and interest rate are not empty.'}
+                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
                 #update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
@@ -415,13 +421,20 @@ class LoanViewSet(viewsets.ModelViewSet):
         if version in self.versions :
             #for now the interest is flat, for personal loan tracker
             if request.data :
-                percentage = int(request.data['interest_rate'])/100
-                amount = int(request.data['amount'])
-                request.data['balance_to_pay'] =  (percentage * amount) + amount
+                request.data._mutable = True
+                if 'interest_rate' and 'amount' in request.data :
+
+                    percentage = int(request.data['interest_rate'])/100
+                    amount = int(request.data['amount'])
+                    request.data['balance_to_pay'] =  (percentage * amount) + amount
+                else:
+                     response = {'message': 'Please check if the amount and interest rate are not empty.'}
+                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
                 #update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
-            return super(LoanViewSet, self).update(request, *args, **kwargs)
+                return super(LoanViewSet, self).create(request, *args, **kwargs)
 
         else:
             response = {'message': 'API version not identified!'}
@@ -440,6 +453,7 @@ class LoanViewSet(viewsets.ModelViewSet):
                     try:
                         user = request.user
                         loan_Record = Loan_Record.objects.filter(user=user.id)
+                        # profile = Profile.objects.get(user=user.id)
                         serializer = LoanSerializer(loan_Record, many=True)
                         response = {'message': 'User loan Records ', 'result': serializer.data}
                         return Response(response, status=status.HTTP_200_OK)
@@ -450,6 +464,9 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 
 
 
