@@ -394,7 +394,6 @@ class LoanViewSet(viewsets.ModelViewSet):
         if version in self.versions :
             #for now the interest is flat, for personal loan tracker
             if request.data :
-                # request.data._mutable = True
                 if 'interest_rate' and 'amount' in request.data :
 
                     percentage = int(request.data['interest_rate'])/100
