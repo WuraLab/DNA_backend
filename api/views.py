@@ -4,8 +4,8 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from .models import Profile,Loan_Record
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer
+from .models import Profile,Loan_Record,Payment
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer, PaymentSerializer
 
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
@@ -483,3 +483,11 @@ class DeleteAccount(viewsets.ModelViewSet):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTENT)
+
+    
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset = Payment.objects.all()
+    serializer_class= PaymentSerializer
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+    versions = ['v1']
