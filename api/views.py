@@ -6,7 +6,6 @@ from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
 from .models import Profile,Loan_Record,Payment
 from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer, PaymentSerializer
-
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
@@ -20,7 +19,11 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
-
+from paystackapi.paystack import Paystack
+from paystackapi.transaction import Transaction
+# testing private key
+paystack_secret_key = "sk_test_904aba5a8cc368ae8650f356a529116d342b87a9"
+paystack = Paystack(secret_key=paystack_secret_key)
 
 
 
@@ -486,8 +489,37 @@ class DeleteAccount(viewsets.ModelViewSet):
 
     
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset = Payment.objects.all()
+    queryset=Payment.objects.all()
     serializer_class= PaymentSerializer
     authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
+
+
+    def create(self, request, version="v1", *args, **kwargs):
+        
+        if version in self.versions :
+            #for now the interest is flat, for personal loan tracker
+            # check if the keys are in the request.data
+             #null checks
+            if 'amount' and 'email' in request.data: 
+                    try:
+                        response = Transaction.initialize(
+                        amount=request.data['amount'],
+                        email=request.data['email']
+                        )
+                        print(request.data)
+
+                        return Response(f'response : {response}', status=status.HTTP_200_OK)
+                        
+                    except NameError:
+                        return Response(f'Some error occured, try again later: {NameError}', status=status.HTTP_400_BAD_REQUEST)
+                   
+            else:
+                return Response('It appears some paramenters are empty', status=status.HTTP_400_BAD_REQUEST)
+               
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    
+
