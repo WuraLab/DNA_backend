@@ -129,7 +129,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
                         get_profile = Profile.objects.get(user=user.id)
                         serializer = EditProfileSerilizer(get_profile, many=False)
                         response = {'message': 'User profile  Updated', 'result': serializer.data}
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                        return Response(response, status=status.HTTP_200_OK)
                     else:
                         response = {'message': 'make sure all fields keys are not empty'}
                         return Response(response, status=status.HTTP_400_BAD_REQUEST)
