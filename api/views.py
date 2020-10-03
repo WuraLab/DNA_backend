@@ -120,15 +120,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 fetched_data =  request.data
                 user = request.user
                 try :
-                     profile = Profile.objects.filter(user=user.id)
-                     profile.update(
+                    if 'facebook_user' and 'amount' and 'phone' in request.data :
+                        profile = Profile.objects.filter(user=user.id)
+                        profile.update(
                                     facebook_user=fetched_data['facebook_user'],
                                     phone=fetched_data['phone'],
                                     profile=fetched_data['profile'])
-                     get_profile = Profile.objects.get(user=user.id)
-                     serializer = EditProfileSerilizer(get_profile, many=False)
-                     response = {'message': 'User profile  Updated', 'result': serializer.data}
-                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                        get_profile = Profile.objects.get(user=user.id)
+                        serializer = EditProfileSerilizer(get_profile, many=False)
+                        response = {'message': 'User profile  Updated', 'result': serializer.data}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                    else:
+                        response = {'message': 'make sure all fields keys are not empty'}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
                 except Profile.DoesNotExist:
                     response = {'message': 'user profile does not exit'}
