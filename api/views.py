@@ -471,12 +471,6 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
 class DeleteAccount(viewsets.ModelViewSet):
 
     queryset=User.objects.all()
@@ -491,7 +485,6 @@ class DeleteAccount(viewsets.ModelViewSet):
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTENT)
 
-    
 class PaymentViewSet(viewsets.ModelViewSet):
     queryset=Payment.objects.all()
     serializer_class= PaymentSerializer
@@ -512,8 +505,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
                         amount=request.data['amount'],
                         email=request.data['email']
                         )
-                        print(request.data)
-
+                        #print(request.data)
                         return Response(f'response : {response}', status=status.HTTP_200_OK)
                         
                     except NameError:
