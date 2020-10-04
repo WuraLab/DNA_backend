@@ -63,6 +63,6 @@ class DeleteAccountSerializer(serializers.ModelSerializer):
 
 class  PaymentSerializer(serializers.ModelSerializer):
     #create api data formaterr.
-    class Meta:
+    class Meta: #pylint: disable=too-few-public-methods
         model=Payment
         fields=('id', 'loan', 'created',"paid_amount")
