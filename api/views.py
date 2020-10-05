@@ -494,22 +494,21 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
 
     def create(self, request, version="v1", *args, **kwargs):
-        
         if version in self.versions :
             #for now the interest is flat, for personal loan tracker
             # check if the keys are in the request.data
              #null checks
             if 'amount' and 'email' in request.data: 
-                    try:
-                        response = Transaction.initialize(
-                        amount=request.data['amount'],
-                        email=request.data['email']
-                        )
-                        #print(request.data)
-                        return Response(f'response : {response}', status=status.HTTP_200_OK)
-                        
-                    except NameError:
-                        return Response(f'Some error occured, try again later: {NameError}', status=status.HTTP_400_BAD_REQUEST)
+                try:
+                    response = Transaction.initialize(
+                    amount=request.data['amount'],
+                    email=request.data['email']
+                    )
+                    #print(request.data)
+                    return Response(f'response : {response}', status=status.HTTP_200_OK)
+                    
+                except NameError:
+                    return Response(f'Some error occured, try again later: {NameError}', status=status.HTTP_400_BAD_REQUEST)
                    
             else:
                 return Response('It appears some paramenters are empty', status=status.HTTP_400_BAD_REQUEST)
