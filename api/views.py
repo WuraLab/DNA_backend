@@ -507,7 +507,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
                     #print(request.data)
                     return Response(f'response : {response}', status=status.HTTP_200_OK)
                 except NameError:
-                    return Response(f'Some error occured, try again later: ', status=status.HTTP_400_BAD_REQUEST)     
+                    return Response('Some error occured, try again later: ', status=status.HTTP_400_BAD_REQUEST)     
             else:
                 return Response('It appears some paramenters are empty', status=status.HTTP_400_BAD_REQUEST)
         else:
