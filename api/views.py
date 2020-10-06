@@ -19,6 +19,7 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
+from django.http import Http404
 
 
 
@@ -440,7 +441,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-   
+
 
 
 
@@ -465,7 +466,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-    
+
 
     def destroy(self, request, *args, **kwargs):
         try:
