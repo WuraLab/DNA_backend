@@ -19,6 +19,8 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
+from django.http import Http404
+
 
 
 
@@ -439,7 +441,8 @@ class LoanViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
-    #    def destroy(self, request, pk=None):
+   
+
 
 
 
@@ -462,6 +465,18 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            self.perform_destroy(instance)
+            response = {'message': 'Loan  is Deleted '}
+            return Response(response, status=status.HTTP_200_OK)
+        except Http404:
+            response = {'message': 'Loan not Found!'}
+            return Response(response , status=status.HTTP_204_NO_CONTENT)
 
 
 
