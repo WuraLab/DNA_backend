@@ -21,9 +21,9 @@ from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
 from paystackapi.paystack import Paystack
 from paystackapi.transaction import Transaction
+
 # testing private key
-paystack_secret_key = "sk_test_904aba5a8cc368ae8650f356a529116d342b87a9"
-paystack = Paystack(secret_key=paystack_secret_key)
+paystack = Paystack(secret_key=config("paystack_secret_key"))
 
 
 
@@ -445,12 +445,6 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-
-    #    def destroy(self, request, pk=None):
-
-
-
 
     # this function is used to update loan records of a user
     def list(self, request, version="v1", *args, **kwargs):

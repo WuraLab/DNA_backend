@@ -26,7 +26,6 @@ Django==3.1
 django-allauth==0.42.0
 django-cors-headers==3.5.0
 django-heroku==0.3.1
-django-inlinecss==0.3.0
 django-rest-auth==0.9.5
 djangorestframework==3.11.1
 doc8==0.8.1
