@@ -4,9 +4,8 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from .models import Profile,Loan_Record
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer
-
+from .models import Profile,Loan_Record,Payment
+from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer, PaymentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
@@ -20,7 +19,11 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
+from paystackapi.paystack import Paystack
+from paystackapi.transaction import Transaction
 
+# testing private key
+paystack = Paystack(secret_key=config("paystack_secret_key"))
 
 
 
@@ -117,15 +120,19 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 fetched_data =  request.data
                 user = request.user
                 try :
-                     profile = Profile.objects.filter(user=user.id)
-                     profile.update(
+                    if 'facebook_user' and 'amount' and 'phone' in request.data :
+                        profile = Profile.objects.filter(user=user.id)
+                        profile.update(
                                     facebook_user=fetched_data['facebook_user'],
                                     phone=fetched_data['phone'],
                                     profile=fetched_data['profile'])
-                     get_profile = Profile.objects.get(user=user.id)
-                     serializer = EditProfileSerilizer(get_profile, many=False)
-                     response = {'message': 'User profile  Updated', 'result': serializer.data}
-                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                        get_profile = Profile.objects.get(user=user.id)
+                        serializer = EditProfileSerilizer(get_profile, many=False)
+                        response = {'message': 'User profile  Updated', 'result': serializer.data}
+                        return Response(response, status=status.HTTP_200_OK)
+                    else:
+                        response = {'message': 'make sure all fields keys are not empty'}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
                 except Profile.DoesNotExist:
                     response = {'message': 'user profile does not exit'}
@@ -439,12 +446,6 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-
-    #    def destroy(self, request, pk=None):
-
-
-
-
     # this function is used to update loan records of a user
     def list(self, request, version="v1", *args, **kwargs):
         if version in self.versions:
@@ -464,12 +465,6 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-
-
-
-
-
-
 class DeleteAccount(viewsets.ModelViewSet):
 
     queryset=User.objects.all()
@@ -483,3 +478,31 @@ class DeleteAccount(viewsets.ModelViewSet):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTENT)
+
+class PaymentViewSet(viewsets.ModelViewSet):
+    queryset=Payment.objects.all()
+    serializer_class= PaymentSerializer
+    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    permission_classes = (IsAuthenticated,)
+    versions = ['v1']
+
+
+    def create(self, request, version="v1", *args, **kwargs):
+        if version in self.versions :
+            #for now the interest is flat, for personal loan tracker
+            # check if the keys are in the request.data
+             #null checks
+            if 'amount' and 'email' in request.data:
+                try:
+                    response = Transaction.initialize(
+                    amount=request.data['amount'],
+                    email=request.data['email']
+                    )
+                    return Response(f'response : {response}', status=status.HTTP_200_OK)
+                except NameError:
+                    return Response('Some error occured, try again later', status=status.HTTP_400_BAD_REQUEST)     
+            else:
+                return Response('It appears some paramenters are empty', status=status.HTTP_400_BAD_REQUEST)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)

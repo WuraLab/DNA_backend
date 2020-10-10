@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import obtain_auth_token
-from .models import Profile ,Loan_Record
+from .models import Profile ,Loan_Record, Payment
 
 class UserRegistrationSerializers(serializers.ModelSerializer):
     # User registration  api data formatter.
@@ -60,3 +60,9 @@ class DeleteAccountSerializer(serializers.ModelSerializer):
             #Return optional model loan record
             model=User
             fields= '__all__'
+
+class  PaymentSerializer(serializers.ModelSerializer):
+    #create api data formaterr.
+    class Meta: #pylint: disable=too-few-public-methods
+        model=Payment
+        fields=('id', 'loan', 'created',"paid_amount")
