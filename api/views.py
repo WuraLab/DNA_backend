@@ -4,8 +4,9 @@ from rest_framework import viewsets, status
 from django.contrib.auth.models import User
 from rest_framework.decorators import action
 from rest_framework.authentication import TokenAuthentication
-from .models import Profile,Loan_Record,Payment
-from .serializers import   UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer,LoanSerializer , DeleteAccountSerializer, PaymentSerializer
+from .models import Profile, Loan_Record, Payment
+from .serializers import UserRegistrationSerializers, ProfileSerializer, EditProfileSerilizer, LoanSerializer, \
+    DeleteAccountSerializer, PaymentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
 import os
@@ -19,32 +20,27 @@ from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 from rest_auth.registration.views import SocialLoginView
-from paystackapi.paystack import Paystack
-from paystackapi.transaction import Transaction
-
-# testing private key
-paystack = Paystack(secret_key=config("paystack_secret_key"))
-
 
 
 # from rest_framework.parsers import FileUploadParser
 
-#login was
+# login was
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
-    serializer_class =  UserRegistrationSerializers
+    serializer_class = UserRegistrationSerializers
     authentication_classes = (TokenAuthentication,)
     permission_classes = (AllowAny,)
-    versions =['v1']
+    versions = ['v1']
+
     # update - default method should be restricted
     # pylint: disable=R0201
-    def update(self, request, *args, **kwargs ):
+    def update(self, request, *args, **kwargs):
         response = {'message': 'You cant Update your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # destroy - IsAuthenticated an isSelf
     # pylint: disable=R0201
-    def destroy(self, request,  *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
@@ -53,6 +49,7 @@ class UserViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
     # pylint: disable=R0201
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant  list or retrieve users Profile like this'}
@@ -62,9 +59,12 @@ class UserViewSet(viewsets.ModelViewSet):
 class ProfileViewSet(viewsets.ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    authentication_classes = (
+        TokenAuthentication,)  # this option is used to authenticate a user, thus django can identify the token and its
+    # owner
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
+
     # only set permissions for actions as update
     # remember to customise Create, delete, retrieve
 
@@ -79,36 +79,34 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # pylint: disable=R0201
-    def destroy(self, request,  *args, **kwargs):
+    def destroy(self, request, *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # pylint: disable=R0201
     def list(self, request, version="v1", *args, **kwargs):
-            # check if the version argument exists in the versions list
-         if version in self.versions:
+        # check if the version argument exists in the versions list
+        if version in self.versions:
 
-                if request.user:
-                    try:
-                        user = request.user
-                        profile = Profile.objects.get(user=user.id)
-                        serializer = ProfileSerializer(profile, many=False)
-                        response = {'message': 'User profile ', 'result': serializer.data}
-                        return Response(response, status=status.HTTP_200_OK)
-                    except IndexError:
-                        response = {'message': 'User not Authenticated! '}
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if request.user:
+                try:
+                    user = request.user
+                    profile = Profile.objects.get(user=user.id)
+                    serializer = ProfileSerializer(profile, many=False)
+                    response = {'message': 'User profile ', 'result': serializer.data}
+                    return Response(response, status=status.HTTP_200_OK)
+                except IndexError:
+                    response = {'message': 'User not Authenticated! '}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-         else:
+        else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-
     # pylint: disable=R0201
-    def retrieve(self, request, pk=None,  *args, **kwargs):
+    def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
 
     # write a custom method that uses the authToken for access privileges
     # pylint: disable=R0201
@@ -116,16 +114,16 @@ class ProfileViewSet(viewsets.ModelViewSet):
     def update_profile(self, request, version="v1"):
         # check if the version argument exists in the versions list
         if version in self.versions:
-            if request.data :
-                fetched_data =  request.data
+            if request.data:
+                fetched_data = request.data
                 user = request.user
-                try :
-                    if 'facebook_user' and 'amount' and 'phone' in request.data :
+                try:
+                    if 'facebook_user' and 'amount' and 'phone' in request.data:
                         profile = Profile.objects.filter(user=user.id)
                         profile.update(
-                                    facebook_user=fetched_data['facebook_user'],
-                                    phone=fetched_data['phone'],
-                                    profile=fetched_data['profile'])
+                            facebook_user=fetched_data['facebook_user'],
+                            phone=fetched_data['phone'],
+                            profile=fetched_data['profile'])
                         get_profile = Profile.objects.get(user=user.id)
                         serializer = EditProfileSerilizer(get_profile, many=False)
                         response = {'message': 'User profile  Updated', 'result': serializer.data}
@@ -140,54 +138,55 @@ class ProfileViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+
 class RecoveryViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all() #used by serializers output
+    queryset = User.objects.all()  # used by serializers output
     authentication_classes = (TokenAuthentication,)
     permission_classes = (AllowAny,)
-    versions =['v1']
+    versions = ['v1']
 
-     # pylint: disable=R0201
+    # pylint: disable=R0201
     def update(self, request, *args, **kwargs):
         response = {'message': 'You cant edit your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-     # pylint: disable=R0201
+    # pylint: disable=R0201
     def list(self, request, *args, **kwargs):
         response = {'message': 'You cant create Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-     # pylint: disable=R0201
-    def destroy(self, request,  *args, **kwargs):
+    # pylint: disable=R0201
+    def destroy(self, request, *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # pylint: disable=R0201
-    def retrieve(self, request, pk=None,  *args, **kwargs):
+    def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-
     def create(self, request, version="v1", *args, **kwargs):
-    # check if the version argument exists in the versions list
+        # check if the version argument exists in the versions list
         if version in self.versions:
-            if request.data :
-                fetched_data =  request.data
-                email= fetched_data['email']
-                try :
-                #    check in fetch email exits
+            if request.data:
+                fetched_data = request.data
+                email = fetched_data['email']
+                try:
+                    #    check in fetch email exits
                     user = User.objects.get(email=email)
                     # create jwt token
                     secret = config('SECRET_KEY')
                     print(secret)
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=5)
-                    encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
+                    encoded = jwt.encode({'email': email, 'exp': dt}, secret, algorithm='HS256')
                     reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
                     # send an e-mail to the user
                     context = {
-                         'user': user,
-                         'reset_link': reset_link
+                        'user': user,
+                        'reset_link': reset_link
                     }
                     print(reset_link)
                     msg_plain = render_to_string('../templates/password_reset_email.txt', context)
@@ -200,7 +199,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
 
                     send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=msg_html)
 
-                    response= {'token': 'email sent!'}
+                    response = {'token': 'email sent!'}
                     return Response(response, status=status.HTTP_200_OK)
                 except User.DoesNotExist:
                     response = {'message': 'No user associated with this email exits!'}
@@ -210,38 +209,38 @@ class RecoveryViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'])
-    def validate_token(self,request, version="v1"):
+    def validate_token(self, request, version="v1"):
         if version in self.versions:
-            if request.data :
-                fetched_data =request.data
-                encoded_token= fetched_data['token']
+            if request.data:
+                fetched_data = request.data
+                encoded_token = fetched_data['token']
                 try:
-                        secret = config("SECRETKEY")
-                        jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
-                        response= {'message': 'Token is still valid and active :)'}
-                        return Response(response, status=status.HTTP_200_OK)
+                    secret = config("SECRETKEY")
+                    jwt.decode(encoded_token, secret, leeway=10, algorithms=['HS256'])
+                    response = {'message': 'Token is still valid and active :)'}
+                    return Response(response, status=status.HTTP_200_OK)
                 except jwt.ExpiredSignatureError:
-                        response= {'message': 'Token expired. Get new one'}
-                        return Response(response, status=status.HTTP_200_OK)
+                    response = {'message': 'Token expired. Get new one'}
+                    return Response(response, status=status.HTTP_200_OK)
                 except jwt.InvalidTokenError:
-                        response= {'message': 'Invalid Token'}
-                        return Response(response, status=status.HTTP_200_OK)
+                    response = {'message': 'Invalid Token'}
+                    return Response(response, status=status.HTTP_200_OK)
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     @action(detail=False, methods=['POST'])
-    def confirm(self,request, version="v1"):
+    def confirm(self, request, version="v1"):
         if version in self.versions:
-            if request.data :
+            if request.data:
                 try:
                     # user token and password
-                    fetched_data =request.data
-                    encoded_token= fetched_data['token']
+                    fetched_data = request.data
+                    encoded_token = fetched_data['token']
                     new_password = fetched_data['password']
 
                     secret = config("SECRETKEY")
-                    decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
+                    decode_token = jwt.decode(encoded_token, secret, leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
 
                     # modify existing user
@@ -253,7 +252,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     return Response(response, status=status.HTTP_200_OK)
 
                 except jwt.InvalidTokenError:
-                    response= {'message': 'Invalid Token'}
+                    response = {'message': 'Invalid Token'}
                     return Response(response, status=status.HTTP_200_OK)
                 except User.DoesNotExist:
                     response = {'message': 'No user associated with this email exits!'}
@@ -262,155 +261,39 @@ class RecoveryViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-class RecoveryViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all() #used by serializers output
-    authentication_classes = (TokenAuthentication,)
-    permission_classes = (AllowAny,)
-    versions =['v1']
-
-     # pylint: disable=R0201
-    def update(self, request, *args, **kwargs):
-        response = {'message': 'You cant edit your Profile like that'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-     # pylint: disable=R0201
-    def list(self, request, *args, **kwargs):
-        response = {'message': 'You cant create Profile like that'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-     # pylint: disable=R0201
-    def destroy(self, request,  *args, **kwargs):
-        response = {'message': 'You cant delete Profile like this'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-    # pylint: disable=R0201
-    def retrieve(self, request, pk=None,  *args, **kwargs):
-        response = {'message': 'You cant retrieve users Profile like this'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-
-    def create(self, request, version="v1", *args, **kwargs):
-    # check if the version argument exists in the versions list
-        if version in self.versions:
-            if request.data :
-                fetched_data =  request.data
-                email= fetched_data['email']
-                try :
-                #    check in fetch email exits
-                    user = User.objects.get(email= email)
-                    # create jwt token
-                    secret = config("SECRET_KEY")
-                    # minutes=1
-                    dt = datetime.now() + timedelta(minutes=10)
-                    encoded = jwt.encode({'email': email, 'exp': dt}, secret ,  algorithm='HS256')
-                    reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
-
-                    # send an e-mail to the user
-                    context = {
-                         'user': user,
-                         'reset_link': reset_link
-                    }
-                    # print(reset_link)
-                    msg_plain = render_to_string('../templates/password_reset_email.txt', context)
-                    msg_html = render_to_string('../templates/password_reset_email.html', context)
-
-                    subject = 'Debt notification account recovery request.'
-                    from_email = settings.EMAIL_HOST_USER
-                    message = msg_plain
-                    recipient_list = [email]
-
-                    send_mail(subject, message, from_email, recipient_list, fail_silently=False, html_message=msg_html)
-
-                    response= {'token': 'email sent!'}
-                    return Response(response, status=status.HTTP_200_OK)
-                except User.DoesNotExist:
-                    response = {'message': 'No user associated with this email exits!'}
-                    return Response(response, status=status.HTTP_404_NOT_FOUND)
-        else:
-            response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=False, methods=['POST'])
-    def validate_token(self,request, version="v1"):
-        if version in self.versions:
-            if request.data :
-                fetched_data =request.data
-                encoded_token= fetched_data['token']
-                try:
-                        secret = config("SECRET_KEY")
-                        jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
-                        response= {'message': 'Token is still valid and active :)'}
-                        return Response(response, status=status.HTTP_200_OK)
-                except jwt.ExpiredSignatureError:
-                        response= {'message': 'Token expired. Get new one'}
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                except jwt.InvalidTokenError:
-                        response= {'message': 'Invalid Token'}
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-    @action(detail=False, methods=['POST'])
-    def confirm(self,request, version="v1"):
-        if version in self.versions:
-            if request.data :
-                try:
-                    # user token and password
-                    fetched_data =request.data
-                    encoded_token= fetched_data['token']
-                    new_password = fetched_data['password']
-
-                    secret = config("SECRET_KEY")
-                    decode_token = jwt.decode(encoded_token, secret,  leeway=10, algorithms=['HS256'])
-                    email = decode_token['email']
-
-                    # modify existing user
-                    user = User.objects.get(email=email)
-
-                    user.set_password(new_password)
-                    user.save()
-                    response = {'success': 'Password reset was successful!'}
-                    return Response(response, status=status.HTTP_200_OK)
-
-                except jwt.InvalidTokenError:
-                    response= {'message': 'Invalid Token'}
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
-                except User.DoesNotExist:
-                    response = {'message': 'No user associated with this email exits!'}
-                    return Response(response, status=status.HTTP_404_NOT_FOUND)
-        else:
-            response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 class FacebookLogin(SocialLoginView):
     adapter_class = FacebookOAuth2Adapter
+
 
 class GoogleLogin(SocialLoginView):
     adapter_class = GoogleOAuth2Adapter
     client_class = OAuth2Client
 
+
 class LoanViewSet(viewsets.ModelViewSet):
     queryset = Loan_Record.objects.all()
-    serializer_class= LoanSerializer
-    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    serializer_class = LoanSerializer
+    authentication_classes = (
+        TokenAuthentication,)  # this option is used to authenticate a user, thus django can identify the token and
+    # its owner
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
 
     def create(self, request, version="v1", *args, **kwargs):
-        if version in self.versions :
-            #for now the interest is flat, for personal loan tracker
-            if request.data :
-                if 'interest_rate' and 'amount' in request.data :
+        if version in self.versions:
+            # for now the interest is flat, for personal loan tracker
+            if request.data:
+                if 'interest_rate' and 'amount' in request.data:
 
-                    percentage = int(request.data['interest_rate'])/100
+                    percentage = int(request.data['interest_rate']) / 100
                     amount = int(request.data['amount'])
-                    request.data['balance_to_pay'] =  (percentage * amount) + amount
+                    request.data['balance_to_pay'] = (percentage * amount) + amount
                 else:
-                     response = {'message': 'Please check if the amount and interest rate are not empty.'}
-                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                    response = {'message': 'Please check if the amount and interest rate are not empty.'}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-                #update the request data with user id in runtime
+                # update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
                 return super(LoanViewSet, self).create(request, *args, **kwargs)
@@ -424,20 +307,20 @@ class LoanViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self, request, version="v1", *args, **kwargs):
-        if version in self.versions :
-            #for now the interest is flat, for personal loan tracker
-            if request.data :
+        if version in self.versions:
+            # for now the interest is flat, for personal loan tracker
+            if request.data:
                 request.data._mutable = True
-                if 'interest_rate' and 'amount' in request.data :
+                if 'interest_rate' and 'amount' in request.data:
 
-                    percentage = int(request.data['interest_rate'])/100
+                    percentage = int(request.data['interest_rate']) / 100
                     amount = int(request.data['amount'])
-                    request.data['balance_to_pay'] =  (percentage * amount) + amount
+                    request.data['balance_to_pay'] = (percentage * amount) + amount
                 else:
-                     response = {'message': 'Please check if the amount and interest rate are not empty.'}
-                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                    response = {'message': 'Please check if the amount and interest rate are not empty.'}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-                #update the request data with user id in runtime
+                # update the request data with user id in runtime
                 request.data.update({'user': request.user.id})
 
                 return super(LoanViewSet, self).create(request, *args, **kwargs)
@@ -449,60 +332,70 @@ class LoanViewSet(viewsets.ModelViewSet):
     # this function is used to update loan records of a user
     def list(self, request, version="v1", *args, **kwargs):
         if version in self.versions:
-             if request.user:
-                    try:
-                        user = request.user
-                        loan_Record = Loan_Record.objects.filter(user=user.id)
-                        # profile = Profile.objects.get(user=user.id)
-                        serializer = LoanSerializer(loan_Record, many=True)
-                        response = {'message': 'User loan Records ', 'result': serializer.data}
-                        return Response(response, status=status.HTTP_200_OK)
-                    except IndexError:
-                        response = {'message':  f' Hi 👋 {user.username}, you have no loan records yet 😔.'}
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+            if request.user:
+                try:
+                    user = request.user
+                    loan_Record = Loan_Record.objects.filter(user=user.id)
+                    # profile = Profile.objects.get(user=user.id)
+                    serializer = LoanSerializer(loan_Record, many=True)
+                    response = {'message': 'User loan Records ', 'result': serializer.data}
+                    return Response(response, status=status.HTTP_200_OK)
+                except IndexError:
+                    response = {'message': f' Hi 👋 {user.username}, you have no loan records yet 😔.'}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-class DeleteAccount(viewsets.ModelViewSet):
 
-    queryset=User.objects.all()
-    serializer_class=DeleteAccountSerializer
-    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+class DeleteAccount(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = DeleteAccountSerializer
+    authentication_classes = (
+        TokenAuthentication,)  # this option is used to authenticate a user, thus django can identify the token and
+    # its owner
     permission_classes = (IsAuthenticated,)
     lookup_field = 'email'
 
     #  pylint: disable=R0201
-    def delete(self, request, pk=None, **kwargs):
+    def destroy(self, request, pk=None, **kwargs):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTENT)
 
+
 class PaymentViewSet(viewsets.ModelViewSet):
-    queryset=Payment.objects.all()
-    serializer_class= PaymentSerializer
-    authentication_classes = (TokenAuthentication,)  #this option is used to authenticate a user, thus django can identify the token and its owner
+    queryset = Payment.objects.all()
+    serializer_class = PaymentSerializer
+    authentication_classes = (
+        TokenAuthentication,)  # this option is used to authenticate a user, thus django can identify the token and
+    # its owner
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
 
-
-    def create(self, request, version="v1", *args, **kwargs):
-        if version in self.versions :
-            #for now the interest is flat, for personal loan tracker
-            # check if the keys are in the request.data
-             #null checks
-            if 'amount' and 'email' in request.data:
-                try:
-                    response = Transaction.initialize(
-                    amount=request.data['amount'],
-                    email=request.data['email']
-                    )
-                    return Response(f'response : {response}', status=status.HTTP_200_OK)
-                except NameError:
-                    return Response('Some error occured, try again later', status=status.HTTP_400_BAD_REQUEST)     
-            else:
-                return Response('It appears some paramenters are empty', status=status.HTTP_400_BAD_REQUEST)
-        else:
-            response = {'message': 'API version not identified!'}
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    # def create(self, request, version="v1", *args, **kwargs):
+    #     if version in self.versions:
+    #         # for now the interest is flat, for personal loan tracker
+    #         if request.data:
+    #             if 'interest_rate' and 'amount' in request.data:
+    #
+    #                 percentage = int(request.data['interest_rate']) / 100
+    #                 amount = int(request.data['amount'])
+    #                 request.data['balance_to_pay'] = (percentage * amount) + amount
+    #             else:
+    #                 response = {'message': 'Please check if the amount and interest rate are not empty.'}
+    #                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    #
+    #             # update the request data with user id in runtime
+    #             request.data.update({'user': request.user.id})
+    #
+    #             return super(LoanViewSet, self).create(request, *args, **kwargs)
+    #
+    #         else:
+    #             response = {'message': 'Please check and make sure all fields are not empty.'}
+    #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     else:
+    #         response = {'message': 'API version not identified!'}
+    #         return Response(response, status=status.HTTP_400_BAD_REQUEST)
