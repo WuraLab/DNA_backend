@@ -132,7 +132,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
                         response = {'message': 'make sure all fields keys are not empty'}
                         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-                except Profile.DoesNotExist:
+                except profile.DoesNotExist:
                     response = {'message': 'user profile does not exit'}
                     return Response(response, status=status.HTTP_200_OK)
         else:
@@ -201,7 +201,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
 
                     response = {'token': 'email sent!'}
                     return Response(response, status=status.HTTP_200_OK)
-                except User.DoesNotExist:
+                except user.DoesNotExist:
                     response = {'message': 'No user associated with this email exits!'}
                     return Response(response, status=status.HTTP_404_NOT_FOUND)
         else:
@@ -215,7 +215,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 fetched_data = request.data
                 encoded_token = fetched_data['token']
                 try:
-                    secret = config("SECRETKEY")
+                    secret = config("SECRET_KEY")
                     jwt.decode(encoded_token, secret, leeway=10, algorithms=['HS256'])
                     response = {'message': 'Token is still valid and active :)'}
                     return Response(response, status=status.HTTP_200_OK)
@@ -254,7 +254,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 except jwt.InvalidTokenError:
                     response = {'message': 'Invalid Token'}
                     return Response(response, status=status.HTTP_200_OK)
-                except User.DoesNotExist:
+                except user.DoesNotExist:
                     response = {'message': 'No user associated with this email exits!'}
                     return Response(response, status=status.HTTP_200_OK)
         else:
