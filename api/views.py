@@ -239,7 +239,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     encoded_token = fetched_data['token']
                     new_password = fetched_data['password']
 
-                    secret = config("SECRETKEY")
+                    secret = config("SECRET_KEY")
                     decode_token = jwt.decode(encoded_token, secret, leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
 
