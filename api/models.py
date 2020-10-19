@@ -41,9 +41,11 @@ class Loan_Record(models.Model):
 
 class Payment(models.Model):
     loan = models.ForeignKey(Loan_Record, on_delete=models.CASCADE, related_name='payment_history')
+
     paid_date = models.DateTimeField(default=False)
     amount_paid = models.IntegerField(default=False)
 
     def __str__(self):
         """one-line docstring for representing the L object."""
         return f'{self.loan.name} '
+
