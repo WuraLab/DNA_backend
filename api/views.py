@@ -374,28 +374,75 @@ class PaymentViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     versions = ['v1']
 
-    # def create(self, request, version="v1", *args, **kwargs):
-    #     if version in self.versions:
-    #         # for now the interest is flat, for personal loan tracker
-    #         if request.data:
-    #             if 'interest_rate' and 'amount' in request.data:
-    #
-    #                 percentage = int(request.data['interest_rate']) / 100
-    #                 amount = int(request.data['amount'])
-    #                 request.data['balance_to_pay'] = (percentage * amount) + amount
-    #             else:
-    #                 response = {'message': 'Please check if the amount and interest rate are not empty.'}
-    #                 return Response(response, status=status.HTTP_400_BAD_REQUEST)
-    #
-    #             # update the request data with user id in runtime
-    #             request.data.update({'user': request.user.id})
-    #
-    #             return super(LoanViewSet, self).create(request, *args, **kwargs)
-    #
-    #         else:
-    #             response = {'message': 'Please check and make sure all fields are not empty.'}
-    #             return Response(response, status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     else:
-    #         response = {'message': 'API version not identified!'}
-    #         return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    def create(self, request, version="v1", *args, **kwargs):
+        if version in self.versions and request.data:
+            errors = []
+            try:
+                if 'loan' and 'paid_date' and 'amount_paid' in request.data:
+                    loan = request.data.get("loan") or None
+                    paid_date = request.data.get("paid_date") or None
+                    amount_paid = request.data.get("amount_paid") or None
+
+                    if loan is None:
+                        errors.append('This loan Id is '
+                                      'empty,This '
+                                      'field may not be '
+                                      'null')
+                    if paid_date is None:
+                        errors.append('The paid date is '
+                                      'empty, Datetime '
+                                      'has wrong format. '
+                                      'Use one of these '
+                                      'formats instead: '
+                                      'YYYY-MM-DDThh:mm['
+                                      ':ss[.uuuuuu]] '
+                                      '[+HH:MM|-HH:MM|Z].')
+                    if amount_paid is None:
+                        errors.append('The amount paid is '
+                                      'empty, A valid '
+                                      'integer is '
+                                      'required')
+
+                    if len(errors) == 0:
+                        return super(PaymentViewSet, self).create(request, *args, **kwargs)
+                    else:
+                        response = {'status': 'false', 'message': errors}
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    response = {'status': 'true',
+                                'message': 'Make sure the '
+                                           'loan_id, '
+                                           'paid_date, '
+                                           'and '
+                                           'amount_paid '
+                                           'fields are '
+                                           'set'}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+            except NameError:
+                response = {'status': 'false', 'message': 'Server error, try again later '}
+                return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        else:
+            response = {'status': 'true', 'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def update(self, request, *args, **kwargs):
+        response = {'message': 'You cant edit your Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def list(self, request, *args, **kwargs):
+        response = {'message': 'You cant create Profile like that'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def destroy(self, request, *args, **kwargs):
+        response = {'message': 'You cant delete Profile like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        response = {'message': 'You cant retrieve users Profile like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
