@@ -119,7 +119,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
                 fetched_data = request.data
                 user = request.user
                 try:
-                    if 'facebook_user' and 'amount' and 'phone' in request.data:
+                    if all(key in request.data for key in ('facebook_user', 'phone', 'profile')):
                         profile = Profile.objects.filter(user=user.id)
                         profile.update(
                             facebook_user=fetched_data['facebook_user'],
@@ -285,8 +285,7 @@ class LoanViewSet(viewsets.ModelViewSet):
         if version in self.versions:
             # for now the interest is flat, for personal loan tracker
             if request.data:
-                if 'interest_rate' and 'amount' in request.data:
-
+                if all(key in request.data for key in ('interest_rate', 'amount')):
                     percentage = int(request.data['interest_rate']) / 100
                     amount = int(request.data['amount'])
                     request.data['balance_to_pay'] = (percentage * amount) + amount
@@ -312,7 +311,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             # for now the interest is flat, for personal loan tracker
             if request.data:
                 request.data._mutable = True
-                if 'interest_rate' and 'amount' in request.data:
+                if all(key in request.data for key in ('interest_rate', 'amount')):
 
                     percentage = int(request.data['interest_rate']) / 100
                     amount = int(request.data['amount'])
