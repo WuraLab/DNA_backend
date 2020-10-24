@@ -1,4 +1,5 @@
 from allauth.socialaccount.adapter import get_adapter
+from django.http import Http404
 from rest_framework.response import Response
 from rest_framework import viewsets, status
 from django.contrib.auth.models import User
@@ -79,7 +80,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
     # pylint: disable=R0201
-    def destroy(self, request, *args, **kwargs):
+    def delete(self, request, *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
@@ -335,9 +336,8 @@ class LoanViewSet(viewsets.ModelViewSet):
             if request.user:
                 try:
                     user = request.user
-                    loan_Record = Loan_Record.objects.filter(user=user.id)
-                    # profile = Profile.objects.get(user=user.id)
-                    serializer = LoanSerializer(loan_Record, many=True)
+                    loan_record = Loan_Record.objects.filter(user=user.id)
+                    serializer = LoanSerializer(loan_record, many=True)
                     response = {'message': 'User loan Records ', 'result': serializer.data}
                     return Response(response, status=status.HTTP_200_OK)
                 except IndexError:
@@ -347,6 +347,25 @@ class LoanViewSet(viewsets.ModelViewSet):
         else:
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, version="v1", *args, **kwargs):
+        if version in self.versions:
+            try:
+                instance = self.get_object()
+                self.perform_destroy(instance)
+                response = {'message': 'Loan Record  is Deleted '}
+                return Response(response, status=status.HTTP_200_OK)
+            except Http404:
+                response = {'message': 'Loan Record not Found!'}
+                return Response(response, status=status.HTTP_204_NO_CONTENT)
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def retrieve(self, request, pk=None, *args, **kwargs):
+        response = {'message': 'You cant retrieve user loan records like this'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeleteAccount(viewsets.ModelViewSet):
@@ -359,10 +378,30 @@ class DeleteAccount(viewsets.ModelViewSet):
     lookup_field = 'email'
 
     #  pylint: disable=R0201
-    def destroy(self, request, pk=None, **kwargs):
+    def delete(self, request, pk=None, **kwargs):
         request.user.delete()
         response = {'message': 'User has been Deleted successfully'}
         return Response(response, status=status.HTTP_204_NO_CONTENT)
+
+        # pylint: disable=R0201
+    def update(self, request, *args, **kwargs):
+        response = {'message': 'Bad request'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def create(self, request, *args, **kwargs):
+        response = {'message': 'Bad request'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def list(self, request, *args, **kwargs):
+        response = {'message': 'Bad request'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        # pylint: disable=R0201
+    def retrieve(self, request, *args, **kwargs):
+        response = {'message': 'Bad request'}
+        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
 
 class PaymentViewSet(viewsets.ModelViewSet):
@@ -427,22 +466,25 @@ class PaymentViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def update(self, request, *args, **kwargs):
         response = {'message': 'You cant edit your Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def list(self, request, *args, **kwargs):
         response = {'message': 'You cant create Profile like that'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def destroy(self, request, *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
