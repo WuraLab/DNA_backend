@@ -329,7 +329,6 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-    # this function is used to update loan records of a user
     def list(self, request, version="v1", *args, **kwargs):
         if version in self.versions:
             if request.user:
@@ -362,6 +361,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant retrieve user loan records like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -383,21 +383,25 @@ class DeleteAccount(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_204_NO_CONTENT)
 
         # pylint: disable=R0201
+
     def update(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def create(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def list(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def retrieve(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -442,6 +446,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
                                       'required')
 
                     if len(errors) == 0:
+
+                        # when a payment is made , calculate the balance to pay and return a status
+                        loan_record = Loan_Record.objects.get(user=request.user.id, id=loan)
+                        loan_record.balance_to_pay = int(loan_record.balance_to_pay) - int(amount_paid)
+                        if loan_record.amount >= loan_record.balance_to_pay:
+                            loan_record.completed = True
+                        loan_record.save()
                         return super(PaymentViewSet, self).create(request, *args, **kwargs)
                     else:
                         response = {'status': 'false', 'message': errors}
@@ -472,9 +483,26 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
         # pylint: disable=R0201
 
-    def list(self, request, *args, **kwargs):
-        response = {'message': 'You cant create Profile like that'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    def list(self, request, version="v1", *args, **kwargs):
+        if version in self.versions:
+            if request.user:
+                try:
+                    user = request.user
+                    # get loan
+                    loan_record = Loan_Record.objects.filter(user=user.id)
+                    # get the payment that has the loan Id
+                    payment = Payment.objects.filter(loan=loan_record)
+
+                    serializer = LoanSerializer(payment, many=True)
+                    response = {'message': ' Payments history for the loan Record ', 'result': serializer.data}
+                    return Response(response, status=status.HTTP_200_OK)
+                except IndexError:
+                    response = {'message': f' Hi  {user.username}, you have made no payments yet 😔.'}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
 
