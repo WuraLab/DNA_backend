@@ -490,12 +490,24 @@ class PaymentViewSet(viewsets.ModelViewSet):
                     user = request.user
                     # get loan
                     loan_record = Loan_Record.objects.filter(user=user.id)
-                    # get the payment that has the loan Id
-                    payment = Payment.objects.filter(loan=loan_record)
+                    for i in loan_record:
+                        print(i.id)
 
-                    serializer = LoanSerializer(payment, many=True)
-                    response = {'message': ' Payments history for the loan Record ', 'result': serializer.data}
-                    return Response(response, status=status.HTTP_200_OK)
+                    # the loan_record Id needs to be parsed on the route
+
+                    # now you need to decide if we need a custom method
+                    # or this method can be modified to our need
+
+
+
+
+
+                    # get the payments with this loan Id
+                    # payment = Payment.objects.filter(loan=loan_record)
+                    #
+                    # serializer = LoanSerializer(payment, many=True)
+                    # response = {'message': ' Payments history for the loan Record ', 'result': serializer.data}
+                    # return Response(response, status=status.HTTP_200_OK)
                 except IndexError:
                     response = {'message': f' Hi  {user.username}, you have made no payments yet 😔.'}
                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
