@@ -33,15 +33,15 @@ class Loan_Record(models.Model):
     lender = models.BooleanField(default=True)
     description = models.TextField()
     balance_to_pay = models.DecimalField(max_digits=15, decimal_places=2, blank=True, null=True)
+    completed = models.BooleanField(default=False)
 
     def __str__(self):
         """one-line docstring for representing the L object."""
-        return self.description
+        return self.description,
 
 
 class Payment(models.Model):
     loan = models.ForeignKey(Loan_Record, on_delete=models.CASCADE, related_name='payment_history')
-
     paid_date = models.DateTimeField(default=False)
     amount_paid = models.IntegerField(default=False)
 

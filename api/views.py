@@ -112,6 +112,7 @@ class ProfileViewSet(viewsets.ModelViewSet):
     # write a custom method that uses the authToken for access privileges
     # pylint: disable=R0201
     @action(detail=False, methods=['PUT'])
+    # Base_Url/api/v1/profile/update_profile/
     def update_profile(self, request, version="v1"):
         # check if the version argument exists in the versions list
         if version in self.versions:
@@ -312,7 +313,6 @@ class LoanViewSet(viewsets.ModelViewSet):
             if request.data:
                 request.data._mutable = True
                 if all(key in request.data for key in ('interest_rate', 'amount')):
-
                     percentage = int(request.data['interest_rate']) / 100
                     amount = int(request.data['amount'])
                     request.data['balance_to_pay'] = (percentage * amount) + amount
@@ -329,7 +329,6 @@ class LoanViewSet(viewsets.ModelViewSet):
             response = {'message': 'API version not identified!'}
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
-    # this function is used to update loan records of a user
     def list(self, request, version="v1", *args, **kwargs):
         if version in self.versions:
             if request.user:
@@ -362,6 +361,7 @@ class LoanViewSet(viewsets.ModelViewSet):
             return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def retrieve(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant retrieve user loan records like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -383,21 +383,25 @@ class DeleteAccount(viewsets.ModelViewSet):
         return Response(response, status=status.HTTP_204_NO_CONTENT)
 
         # pylint: disable=R0201
+
     def update(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def create(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def list(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
+
     def retrieve(self, request, *args, **kwargs):
         response = {'message': 'Bad request'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
@@ -442,6 +446,13 @@ class PaymentViewSet(viewsets.ModelViewSet):
                                       'required')
 
                     if len(errors) == 0:
+
+                        # when a payment is made , calculate the balance to pay and return a status
+                        loan_record = Loan_Record.objects.get(user=request.user.id, id=loan)
+                        loan_record.balance_to_pay = int(loan_record.balance_to_pay) - int(amount_paid)
+                        if loan_record.amount >= loan_record.balance_to_pay:
+                            loan_record.completed = True
+                        loan_record.save()
                         return super(PaymentViewSet, self).create(request, *args, **kwargs)
                     else:
                         response = {'status': 'false', 'message': errors}
@@ -472,18 +483,41 @@ class PaymentViewSet(viewsets.ModelViewSet):
 
         # pylint: disable=R0201
 
-    def list(self, request, *args, **kwargs):
-        response = {'message': 'You cant create Profile like that'}
-        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+    def retrieve(self, request, version="v1", pk=None, *args, **kwargs):
+        # pass the loan id = pk
+        # the loan_record Id needs to be parsed on the route
+        if version in self.versions:
+            if request.user:
+                try:
+                    user = request.user
+                    # get loan
+                    loan_record = Loan_Record.objects.filter(user=user.id, id=pk)
+
+                    # retrieve the loan_id
+                    for i in loan_record:
+                        loan_record = i.id
+
+                    # get the payments with this loan Id
+                    payment = Payment.objects.filter(loan=loan_record)
+
+                    serializer = PaymentSerializer(payment, many=True)
+                    response = {'message': ' Payments history for this loan record ', 'result': serializer.data}
+                    return Response(response, status=status.HTTP_200_OK)
+                except IndexError:
+                    response = {'message': f' Hi  {user.username}, you have made no payments yet 😔.'}
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            response = {'message': 'API version not identified!'}
+            return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
-
     def destroy(self, request, *args, **kwargs):
         response = {'message': 'You cant delete Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         # pylint: disable=R0201
 
-    def retrieve(self, request, pk=None, *args, **kwargs):
+    def list(self, request, pk=None, *args, **kwargs):
         response = {'message': 'You cant retrieve users Profile like this'}
         return Response(response, status=status.HTTP_400_BAD_REQUEST)
