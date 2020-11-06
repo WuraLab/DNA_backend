@@ -467,7 +467,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
                                            'fields are '
                                            'set'}
                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
             except NameError:
                 response = {'status': 'false', 'message': 'Server error, try again later '}
                 return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
