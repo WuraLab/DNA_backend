@@ -12,12 +12,12 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
-from decouple import config
-import dj_database_url
+
+# from decouple import config
+# import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 
 SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
 DEBUG = True
@@ -26,33 +26,31 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['https://dnappserver.herokuapp.com/', '127.0.0.1']
 
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
 ]
 
 INSTALLED_APPS = [
-'django.contrib.contenttypes',
-'django.contrib.admin',
-'django.contrib.auth',
-'django.contrib.sessions',
-'django.contrib.messages',
-'django.contrib.sites',
-'django.contrib.staticfiles',
-'rest_framework',
-'rest_framework.authtoken',
-'rest_auth',
-'allauth',
-'allauth.account',
-'rest_auth.registration',
-'allauth.socialaccount',
-'allauth.socialaccount.providers.facebook',
-'allauth.socialaccount.providers.google',
-'corsheaders',
-'api',
+    'django.contrib.contenttypes',
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.sites',
+    'django.contrib.staticfiles',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'rest_auth',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.google',
+    'corsheaders',
+    'api',
 ]
-
 
 # Provider specific settings
 SOCIALACCOUNT_PROVIDERS = {
@@ -66,7 +64,7 @@ SOCIALACCOUNT_PROVIDERS = {
             'key': ''
         }
     },
-     'google': {
+    'google': {
         'APP': {
             'client_id': '459700624852-uf0jsku7r8e03mlu5oeahph3rqr0k1fj.apps.googleusercontent.com',
             'secret': 'tRfCB1Ay5W6D2cd1ymSaBwxn',
@@ -76,7 +74,6 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SITE_ID = 1
-
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -92,12 +89,11 @@ MIDDLEWARE = [
 
 if DEBUG == True:
     CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8100",
-    "http://127.0.0.1:9000"
+        "http://localhost:8100",
+        "http://127.0.0.1:9000"
     ]
 else:
     CORS_ALLOW_ALL_ORIGINS = True
-
 
 ROOT_URLCONF = 'DNA.urls'
 
@@ -132,41 +128,38 @@ EMAIL_PORT = 587
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
-
-if DEBUG == True:  #Use SQlite locally
-   DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
-else: #Use Postgress in Production
+if DEBUG == True:  # Use SQlite locally
     DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dfg2duqtvpk479',
-        'HOST': 'ec2-52-44-55-63.compute-1.amazonaws.com',
-        'PORT': 5432,
-        'USER': 'dbeotowmlducor',
-        'PASSWORD':'6b1e9b99ba773e40feb655e1388829bf5c6ef875ff67582bf728d3c66c585287'
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:  # Use Postgress in Production
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'dfg2duqtvpk479',
+            'HOST': 'ec2-52-44-55-63.compute-1.amazonaws.com',
+            'PORT': 5432,
+            'USER': 'dbeotowmlducor',
+            'PASSWORD': '6b1e9b99ba773e40feb655e1388829bf5c6ef875ff67582bf728d3c66c585287'
+        }
+    }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],
-     'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
+    'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'profile')
 MEDIA_URL = '/profile/'
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -186,7 +179,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -200,12 +192,9 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
 
 django_heroku.settings(locals())
