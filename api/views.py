@@ -179,18 +179,19 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     user = User.objects.get(email=email)
                     # create jwt token
                     secret = config('SECRET_KEY')
-                    print(secret)
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=5)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret, algorithm='HS256')
                     reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
+                    token = encoded.decode("utf-8")
 
                     # send an e-mail to the user
                     context = {
                         'user': user,
-                        'reset_link': reset_link
+                        'reset_link': reset_link,
+                        'token': token,
                     }
-                    print(reset_link)
+                    print(context)
                     msg_plain = render_to_string('../templates/password_reset_email.txt', context)
                     msg_html = render_to_string('../templates/password_reset_email.html', context)
 
@@ -203,8 +204,8 @@ class RecoveryViewSet(viewsets.ModelViewSet):
 
                     response = {'token': 'email sent!'}
                     return Response(response, status=status.HTTP_200_OK)
-                except user.DoesNotExist:
-                    response = {'message': 'No user associated with this email exits!'}
+                except:
+                    response = {'message': 'Something went weong, please try again!'}
                     return Response(response, status=status.HTTP_404_NOT_FOUND)
         else:
             response = {'message': 'API version not identified!'}
