@@ -10,7 +10,6 @@ from .serializers import UserRegistrationSerializers, ProfileSerializer, EditPro
     DeleteAccountSerializer, PaymentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
-import os
 from decouple import config
 from datetime import datetime, timedelta
 # favour django-mailer but fall back to django.core.mail
@@ -467,7 +466,6 @@ class PaymentViewSet(viewsets.ModelViewSet):
                                            'fields are '
                                            'set'}
                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
             except NameError:
                 response = {'status': 'false', 'message': 'Server error, try again later '}
                 return Response(response, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -488,23 +486,23 @@ class PaymentViewSet(viewsets.ModelViewSet):
         # the loan_record Id needs to be parsed on the route
         if version in self.versions:
             if request.user:
+                user = request.user
                 try:
-                    user = request.user
                     # get loan
                     loan_record = Loan_Record.objects.filter(user=user.id, id=pk)
 
                     # retrieve the loan_id
-                    for i in loan_record:
-                        loan_record = i.id
+                    loan_id = loan_record[0].id
 
                     # get the payments with this loan Id
-                    payment = Payment.objects.filter(loan=loan_record)
+                    payment = Payment.objects.filter(loan=loan_id)
 
+                    # serialize this output to the correct format
                     serializer = PaymentSerializer(payment, many=True)
                     response = {'message': ' Payments history for this loan record ', 'result': serializer.data}
                     return Response(response, status=status.HTTP_200_OK)
                 except IndexError:
-                    response = {'message': f' Hi  {user.username}, you have made no payments yet 😔.'}
+                    response = {'message': f' Hi  {user.username}, you have made no payments yet 😔 for this loan.'}
                     return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         else:
