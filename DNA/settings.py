@@ -27,8 +27,6 @@ DEBUG = True
 ALLOWED_HOSTS = ['https://dnappserver.herokuapp.com/', '127.0.0.1']
 
 
-
-
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend'
