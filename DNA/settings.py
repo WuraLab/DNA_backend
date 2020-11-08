@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 import django_heroku
-from decouple import config
-import dj_database_url
+
+# from decouple import config
+# import dj_database_url
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -86,7 +87,7 @@ MIDDLEWARE = [
 
 ]
 
-if DEBUG == True:
+if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8100",
         "http://127.0.0.1:9000"
@@ -131,7 +132,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 
-if DEBUG == True:  # Use SQlite locally
+
+if DEBUG:  # Use SQlite locally
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
