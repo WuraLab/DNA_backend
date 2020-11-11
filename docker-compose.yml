@@ -5,16 +5,25 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_DB=myproject
-      - POSTGRES_USER=supernextwebb
-      - POSTGRES_PASSWORD=p@55DNS
+      - POSTGRES_USER=masterUsername
+      - POSTGRES_PASSWORD=2?r_2N78:Hz^:)g_1121312
+      - POSTGRES_DB=dnaDB
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   web:
     build: .
-    command: bash -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8002"
-    container_name: DNA_backend
+    command: > 
+        bash -c "
+        python manage.py makemigrations
+        && python manage.py migrate 
+        && python manage.py runserver 0.0.0.0:8002
+        "
+    image: dna-backend-server
     volumes:
       - .:/DNA_backend
-    ports:
-      - "8002:80"
     depends_on:
       - db
+    ports:
+      - "8002:8002"

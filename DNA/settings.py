@@ -135,10 +135,10 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.environ.get('DATABASE_NAME'),
-        "USER": os.environ.get('DATABASE_USER'),
-        "PASSWORD": os.environ.get('DATABASE_PASSWORD'),
-        "HOST": os.environ.get('DATABASE_HOST'),
+        "NAME": 'dnaDB',
+        "USER": 'masterUsername',
+        "PASSWORD": '2?r_2N78:Hz^:)g_1121312',
+        "HOST": 'rds-postgresql-dnapp.cznjby4bbeet.us-east-2.rds.amazonaws.com',
         "PORT": '5432'
     }
 }
