@@ -1,0 +1,6 @@
+branch-defaults:
+  setup-postgresdb:
+    environment: null
+    group_suffix: null
+global:
+  profile: eb-cli
