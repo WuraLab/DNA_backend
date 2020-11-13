@@ -11,20 +11,16 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
-
-#from decouple import config
-# import dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
+SECRET_KEY = config("SECRET_KEY")
 DEBUG = True
-# SECRET_KEY = config('SECRETKEY')
-# DEBUG = config("DEBUG")
+DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS=['ec2-18-217-0-29.us-east-2.compute.amazonaws.com']
+ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -59,16 +55,14 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '329679158218337',
-            'secret': 'f63d610c89c1317fdea68c13ebf493ce',
-            'key': ''
+            'client_id': config('FACEBOOK_SOCIAL_CLIENT_ID'),
+            'secret':config('FACEBOOK_SOCILA_SECRET')
         }
     },
     'google': {
         'APP': {
-            'client_id': '459700624852-uf0jsku7r8e03mlu5oeahph3rqr0k1fj.apps.googleusercontent.com',
-            'secret': 'tRfCB1Ay5W6D2cd1ymSaBwxn',
-            'key': ''
+            'client_id': config('GOOGLE_SOCIAL_CLIENT_ID'),
+            'secret': config('GOOGLE_SOCIAL_SECRET')
         }
     },
 }
@@ -114,32 +108,29 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DNA.wsgi.application'
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-
-EMAIL_HOST_USER = 'debtapp95@gmail.com'
-EMAIL_HOST_PASSWORD = 'gfrawjggnnedcirz'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = config('EMAIL_BACKEND')
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.postgresql",
+#         "NAME": 'dnaDB',
+#         "USER": 'masterUsername',
+#         "PASSWORD": '2?r_2N78:Hz^:)g_1121312',
+#         "HOST": 'rds-postgresql-dnapp.cznjby4bbeet.us-east-2.rds.amazonaws.com',
+#         "PORT"z: 5432
+#     }
+# }
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": 'dnaDB',
-        "USER": 'masterUsername',
-        "PASSWORD": '2?r_2N78:Hz^:)g_1121312',
-        "HOST": 'rds-postgresql-dnapp.cznjby4bbeet.us-east-2.rds.amazonaws.com',
-        "PORT": 5432
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -184,9 +175,4 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-django_heroku.settings(locals())
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
