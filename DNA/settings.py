@@ -24,7 +24,7 @@ DEBUG = True
 # SECRET_KEY = config('SECRETKEY')
 # DEBUG = config("DEBUG")
 
-ALLOWED_HOSTS = ['https://dnappserver.herokuapp.com/', '127.0.0.1']
+ALLOWED_HOSTS=['ec2-18-217-0-29.us-east-2.compute.amazonaws.com']
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -139,7 +139,7 @@ DATABASES = {
         "USER": 'masterUsername',
         "PASSWORD": '2?r_2N78:Hz^:)g_1121312',
         "HOST": 'rds-postgresql-dnapp.cznjby4bbeet.us-east-2.rds.amazonaws.com',
-        "PORT": '5432'
+        "PORT": 5432
     }
 }
 
