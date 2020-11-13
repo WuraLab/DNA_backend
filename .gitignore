@@ -6,7 +6,7 @@ __pycache__/
 
 # C extensions
 *.so
-
+root certificate.pem
 # Distribution / packaging
 .Python
 env/
