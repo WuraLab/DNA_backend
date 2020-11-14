@@ -17,9 +17,9 @@ from decouple import config
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = config("SECRET_KEY")
-DEBUG = True
 DEBUG = config("DEBUG")
 
+# public dns  for the app's ec2 server
 ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
 
 AUTHENTICATION_BACKENDS = [
@@ -56,13 +56,15 @@ SOCIALACCOUNT_PROVIDERS = {
         # credentials, or list them here:
         'APP': {
             'client_id': config('FACEBOOK_SOCIAL_CLIENT_ID'),
-            'secret':config('FACEBOOK_SOCILA_SECRET')
+            'secret':config('FACEBOOK_SOCILA_SECRET'),
+            'key': ''
         }
     },
     'google': {
         'APP': {
             'client_id': config('GOOGLE_SOCIAL_CLIENT_ID'),
-            'secret': config('GOOGLE_SOCIAL_SECRET')
+            'secret': config('GOOGLE_SOCIAL_SECRET'),
+            'key': ''
         }
     },
 }
@@ -84,7 +86,8 @@ MIDDLEWARE = [
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8100",
-        "http://127.0.0.1:9000"
+        "http://127.0.0.1:9000",
+        "localhost"
     ]
 else:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -116,23 +119,24 @@ EMAIL_PORT = config('EMAIL_PORT')
 EMAIL_USE_TLS = config('EMAIL_USE_TLS')
 
 # Database
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.postgresql",
-#         "NAME": 'dnaDB',
-#         "USER": 'masterUsername',
-#         "PASSWORD": '2?r_2N78:Hz^:)g_1121312',
-#         "HOST": 'rds-postgresql-dnapp.cznjby4bbeet.us-east-2.rds.amazonaws.com',
-#         "PORT"z: 5432
-#     }
-# }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DEBUG:
+    DATABASES = {
+        "default": {
+            "ENGINE": config('DATABASE_ENGINE'),
+            "NAME": config('DATABASE_NAME'),
+            "USER": config('DATABASE_USER'),
+            "PASSWORD": config('DATABASE_PASSWORD'),
+            "HOST": config('DATABASE_HOST'),
+            "PORT": config('PORT')
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -140,9 +144,6 @@ REST_FRAMEWORK = {
     ],
     'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'profile')
-MEDIA_URL = '/profile/'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -176,3 +177,6 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/profile')
+MEDIA_URL = 'static/profile/'

@@ -4,9 +4,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+./api/migrations/
 # C extensions
 *.so
-root certificate.pem
+./root certificate.pem
 # Distribution / packaging
 .Python
 env/

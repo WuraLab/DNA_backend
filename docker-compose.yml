@@ -5,9 +5,11 @@ services:
   db:
     image: postgres
     environment:
-      - POSTGRES_USER=masterUsername
-      - POSTGRES_PASSWORD=2?r_2N78:Hz^:)g_1121312
-      - POSTGRES_DB=dnaDB
+      - environment:
+          - POSTGRES_USER: "${DATABASE_USER}"
+          - POSTGRES_DB: "${DATABASE_NAME}"
+          - POSTGRES_PASSWORD: "${DATABASE_PASSWORD}"
+          - POSTGRES_HOST: "${DATABASE_HOST}"
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
@@ -18,7 +20,7 @@ services:
         bash -c "
         python manage.py makemigrations
         && python manage.py migrate 
-        && python manage.py runserver 0.0.0.0:8002
+        && python manage.py runserver 0.0.0.0:8000
         "
     image: dna-backend-server
     volumes:
@@ -26,4 +28,4 @@ services:
     depends_on:
       - db
     ports:
-      - "8002:8002"
+      - "8000:80"
