@@ -3,13 +3,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
-./idea
-./.vscode
-./.env
-./api/migrations/
+.idea
+.vscode
+.env
 # C extensions
 *.so
-./root certificate.pem
+root certificate.pem
 # Distribution / packaging
 .Python
 env/
