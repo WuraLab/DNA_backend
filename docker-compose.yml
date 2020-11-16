@@ -1,0 +1,29 @@
+version: '3.8'
+
+# This file defines two services: The db service and the web service.
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=masterUsername
+      - POSTGRES_PASSWORD=2?r_2N78:Hz^:)g_1121312
+      - POSTGRES_DB=dnaDB
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  web:
+    build: .
+    command: > 
+        bash -c "
+        python manage.py makemigrations
+        && python manage.py migrate 
+        && python manage.py runserver 0.0.0.0:8002
+        "
+    image: dna-backend-server
+    volumes:
+      - .:/DNA_backend
+    depends_on:
+      - db
+    ports:
+      - "8002:8002"
