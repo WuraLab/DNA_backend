@@ -10,7 +10,7 @@ from .serializers import UserRegistrationSerializers, ProfileSerializer, EditPro
     DeleteAccountSerializer, PaymentSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 import jwt
-from decouple import config
+import os
 from datetime import datetime, timedelta
 # favour django-mailer but fall back to django.core.mail
 from django.conf import settings
@@ -177,12 +177,12 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     #    check in fetch email exits
                     user = User.objects.get(email=email)
                     # create jwt token
-                    secret = config('SECRET_KEY')
+                    secret = os.getenv('SECRET_KEY')
                     print(secret)
                     # minutes=1
                     dt = datetime.now() + timedelta(minutes=5)
                     encoded = jwt.encode({'email': email, 'exp': dt}, secret, algorithm='HS256')
-                    reset_link = f'{config("RESETPASS_URL")}/{encoded.decode("utf-8")}'
+                    reset_link = f'{os.getenv("RESETPASS_URL")}/{encoded.decode("utf-8")}'
 
                     # send an e-mail to the user
                     context = {
@@ -216,7 +216,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                 fetched_data = request.data
                 encoded_token = fetched_data['token']
                 try:
-                    secret = config("SECRET_KEY")
+                    secret = os.getenv("SECRET_KEY")
                     jwt.decode(encoded_token, secret, leeway=10, algorithms=['HS256'])
                     response = {'message': 'Token is still valid and active :)'}
                     return Response(response, status=status.HTTP_200_OK)
@@ -240,7 +240,7 @@ class RecoveryViewSet(viewsets.ModelViewSet):
                     encoded_token = fetched_data['token']
                     new_password = fetched_data['password']
 
-                    secret = config("SECRET_KEY")
+                    secret = os.getenv("SECRET_KEY")
                     decode_token = jwt.decode(encoded_token, secret, leeway=10, algorithms=['HS256'])
                     email = decode_token['email']
 

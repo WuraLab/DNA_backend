@@ -11,16 +11,17 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-from decouple import config
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = config("SECRET_KEY")
-DEBUG = config("DEBUG")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG")
 
 # public dns  for the app's ec2 server
-ALLOWED_HOSTS = [config('ALLOWED_HOSTS')]
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -55,15 +56,15 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': config('FACEBOOK_SOCIAL_CLIENT_ID'),
-            'secret':config('FACEBOOK_SOCILA_SECRET'),
+            'client_id': os.getenv('FACEBOOK_SOCIAL_CLIENT_ID'),
+            'secret': os.getenv('FACEBOOK_SOCIAL_SECRET'),
             'key': ''
         }
     },
     'google': {
         'APP': {
-            'client_id': config('GOOGLE_SOCIAL_CLIENT_ID'),
-            'secret': config('GOOGLE_SOCIAL_SECRET'),
+            'client_id': os.getenv('GOOGLE_SOCIAL_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SOCIAL_SECRET'),
             'key': ''
         }
     },
@@ -87,7 +88,7 @@ if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8100",
         "http://127.0.0.1:9000",
-        "localhost"
+        "http://localhost:8000"
     ]
 else:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -111,23 +112,23 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DNA.wsgi.application'
-EMAIL_BACKEND = config('EMAIL_BACKEND')
-EMAIL_HOST = config('EMAIL_HOST')
-EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-EMAIL_PORT = config('EMAIL_PORT')
-EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 
 # Database
 if DEBUG:
     DATABASES = {
         "default": {
-            "ENGINE": config('DATABASE_ENGINE'),
-            "NAME": config('DATABASE_NAME'),
-            "USER": config('DATABASE_USER'),
-            "PASSWORD": config('DATABASE_PASSWORD'),
-            "HOST": config('DATABASE_HOST'),
-            "PORT": config('PORT')
+            "ENGINE": os.getenv('DATABASE_ENGINE'),
+            "NAME": os.getenv('DATABASE_NAME'),
+            "USER": os.getenv('DATABASE_USER'),
+            "PASSWORD": os.getenv('DATABASE_PASSWORD'),
+            "HOST": os.getenv('DATABASE_HOST'),
+            "PORT": os.getenv('PORT')
         }
     }
 else:

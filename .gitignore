@@ -4,8 +4,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .idea
-.vscode
-.env
+
 # C extensions
 *.so
 root certificate.pem
