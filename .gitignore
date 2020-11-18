@@ -108,6 +108,8 @@ media/
 *.pyc
 *.db
 *.pid
+pgdata
+pg
 
 # Ignore Django Migrations in Development if you are working on team
 
