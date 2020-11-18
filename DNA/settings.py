@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 from dotenv import load_dotenv, find_dotenv
+
 load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -88,7 +89,6 @@ if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8100",
         "http://127.0.0.1:9000",
-        "http://localhost:8000"
     ]
 else:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -120,24 +120,23 @@ EMAIL_PORT = os.getenv('EMAIL_PORT')
 EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 
 # Database
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": os.getenv('DATABASE_ENGINE'),
-            "NAME": os.getenv('DATABASE_NAME'),
-            "USER": os.getenv('DATABASE_USER'),
-            "PASSWORD": os.getenv('DATABASE_PASSWORD'),
-            "HOST": os.getenv('DATABASE_HOST'),
-            "PORT": os.getenv('PORT')
-        }
+DATABASES = {
+    "default": {
+        "ENGINE": os.getenv('DATABASE_ENGINE'),
+        "NAME": os.getenv('DATABASE_NAME'),
+        "USER": os.getenv('DATABASE_USER'),
+        "PASSWORD": os.getenv('DATABASE_PASSWORD'),
+        "HOST": os.getenv('DATABASE_HOST'),
+        "PORT": os.getenv('PORT')
     }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-        }
-    }
+}
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -177,7 +176,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static/")
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/profile')
-MEDIA_URL = 'static/profile/'
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_URL = '/static/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'profile')
+MEDIA_URL = '/static/profile/'
