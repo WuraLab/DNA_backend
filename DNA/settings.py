@@ -11,20 +11,18 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
-import django_heroku
+from dotenv import load_dotenv, find_dotenv
 
-#from decouple import config
-# import dj_database_url
+load_dotenv(find_dotenv())
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-SECRET_KEY = '_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707u#0hy&o)oclh=jd'
-DEBUG = True
-# SECRET_KEY = config('SECRETKEY')
-# DEBUG = config("DEBUG")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG")
 
-ALLOWED_HOSTS = ['https://dnappserver.herokuapp.com/', '127.0.0.1']
+# public dns  for the app's ec2 server
+ALLOWED_HOSTS = [os.getenv('ALLOWED_HOSTS')]
 
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
@@ -59,15 +57,15 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': '329679158218337',
-            'secret': 'f63d610c89c1317fdea68c13ebf493ce',
+            'client_id': os.getenv('FACEBOOK_SOCIAL_CLIENT_ID'),
+            'secret': os.getenv('FACEBOOK_SOCIAL_SECRET'),
             'key': ''
         }
     },
     'google': {
         'APP': {
-            'client_id': '459700624852-uf0jsku7r8e03mlu5oeahph3rqr0k1fj.apps.googleusercontent.com',
-            'secret': 'tRfCB1Ay5W6D2cd1ymSaBwxn',
+            'client_id': os.getenv('GOOGLE_SOCIAL_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_SOCIAL_SECRET'),
             'key': ''
         }
     },
@@ -90,7 +88,7 @@ MIDDLEWARE = [
 if DEBUG:
     CORS_ALLOWED_ORIGINS = [
         "http://localhost:8100",
-        "http://127.0.0.1:9000"
+        "http://127.0.0.1:9000",
     ]
 else:
     CORS_ALLOW_ALL_ORIGINS = True
@@ -114,34 +112,31 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'DNA.wsgi.application'
-# EMAIL_BACKEND = config('EMAIL_BACKEND')
-# EMAIL_HOST = config('EMAIL_HOST')
-# EMAIL_HOST_USER = config('EMAIL_HOST_USER')
-# EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-# EMAIL_PORT = config('EMAIL_PORT')
-# EMAIL_USE_TLS = config('EMAIL_USE_TLS')
-
-EMAIL_HOST_USER = 'debtapp95@gmail.com'
-EMAIL_HOST_PASSWORD = 'gfrawjggnnedcirz'
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = os.getenv('EMAIL_BACKEND')
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS')
 
 # Database
-# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
-
-
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": 'dnaDB',
-        "USER": 'masterUsername',
-        "PASSWORD": '2?r_2N78:Hz^:)g_1121312',
-        "HOST": 'rds-postgresql-dnapp.cznjby4bbeet.us-east-2.rds.amazonaws.com',
-        "PORT": '5432'
+        "ENGINE": os.getenv('DATABASE_ENGINE'),
+        "NAME": os.getenv('DATABASE_NAME'),
+        "USER": os.getenv('DATABASE_USER'),
+        "PASSWORD": os.getenv('DATABASE_PASSWORD'),
+        "HOST": os.getenv('DATABASE_HOST'),
+        "PORT": os.getenv('PORT')
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
@@ -149,9 +144,6 @@ REST_FRAMEWORK = {
     ],
     'DATETIME_FORMAT': "%m/%d/%Y %H:%M:%S",
 }
-
-MEDIA_ROOT = os.path.join(BASE_DIR, 'profile')
-MEDIA_URL = '/profile/'
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -184,9 +176,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-django_heroku.settings(locals())
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+STATIC_URL = '/static/static/'
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'profile')
+MEDIA_URL = '/static/profile/'
