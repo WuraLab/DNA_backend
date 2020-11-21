@@ -2,23 +2,10 @@ version: '3.8'
 
 # This file defines two services: The db service and the web service.
 services:
-  db:
-    image: postgres
-    restart: always
-    environment:
-        - "POSTGRES_USER:${DATABASE_USER}"
-        - "POSTGRES_DB:${DATABASE_NAME}"
-        - "POSTGRES_PASSWORD:${DATABASE_PASSWORD}"
-        - "POSTGRES_HOST:${DATABASE_HOST}"
-    volumes:
-      - ./pgdata:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
   web:
     build: .
     command: > 
         bash -c "
-        
         python manage.py makemigrations
         && python manage.py migrate 
         && python manage.py runserver 0.0.0.0:8000
@@ -28,5 +15,19 @@ services:
       - .:/DNA_backend
     depends_on:
       - db
+      # expose port 8000 to the host machine
+      # then send data to the main port open in the docker container, port 8000
     ports:
-      - "8000:80"
+      - "8000:8000"
+  db:
+    image: postgres
+    restart: always
+    environment:
+      - "POSTGRES_USER:${DATABASE_USER}"
+      - "POSTGRES_DB:${DATABASE_NAME}"
+      - "POSTGRES_PASSWORD:${DATABASE_PASSWORD}"
+      - "POSTGRES_HOST:${DATABASE_HOST}"
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
