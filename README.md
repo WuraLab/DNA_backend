@@ -1,32 +1,38 @@
 # DNA_backend
+
 ## Debt Notification App
 **Manage all your loans with a personal loan tracker.**
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/49aa75c6402d45019082dd8280abaa09)](https://app.codacy.com/gh/WuraLab/DNA_backend?utm_source=github.com&utm_medium=referral&utm_content=WuraLab/DNA_backend&utm_campaign=Badge_Grade_Dashboard)
 
 [Website](https://nigeria-api.netlify.app/) • [Docs]() • [Example](#examples)
+
 ## Contents
 
-- [About](##About)
-- [Getting Started](##getting-started)
-- [Usage](#USAGE)
-- [Set up the backend](##Set-up-the-backend)
-- [Set up backend](##Setting-it-up-locally)
+- [DNA_backend](#dna_backend)
+  - [Debt Notification App](#debt-notification-app)
+  - [Contents](#contents)
+  - [About](#about)
+  - [Getting Started](#getting-started)
+- [USAGE](#usage)
+  - [Set up the backend  locally](#set-up-the-backend-locally)
+    - [Fork the Repo](#fork-the-repo)
+    - [Clone the repository](#clone-the-repository)
+    - [Install all dependencies](#install-all-dependencies)
+    - [To start the App and run locally](#to-start-the-app-and-run-locally)
+    - [Setting it using docker-compose](#setting-it-using-docker-compose)
+  - [To see the application live](#to-see-the-application-live)
+- [Stack](#stack)
 - [Community](#community)
-- [Top-level directory layout](#Top-level-directory-layout)
+- [Top-level directory layout](#top-level-directory-layout)
 - [Contributing](#contributing)
 
 ## About
-Nigeria API is an open-source project which was initiated at Automation Cube(wuralab)
+DNA_backend is an open-source project which was initiated at Automation Cube(Wuralab)
 
-The Projects aims at solving the problem of difficulties to find API that exposes DATA about Nigeria. Sometime we have project to work on where we need to display DATA about nigeria, such as University in nigeria, industry in nigeria.
-
-The end goal of this project is to have enough DATA on nigeria which can be accessed through an API.
-
-We want to take away the stress faced by developers when working on projects that involves or needs nigeria data.
 
 ## Getting Started
-
+// Some Information
 
 # USAGE
 1. Set up the backend
@@ -35,77 +41,84 @@ To make use of the API, There are two ways to set it up
 2. Setting it up locally 
 3. Setting it using docker-compose
 
-## Set up the backend
- Let's start by setting up a database with some sample data. We'll use PostgreSQL and our example e-commerce dataset for this tutorial. You can download and import it by running the following commands.
 
-```
-$ curl <https://github.com/WuraLab/NigeriaApi/blob/sqlDump/output.sql> > outpput.sql
-$ createdb <DBNAME>
-$ psql --dbname <DBNAME> -f output.sql
-```
-For example,
 
-```bash
-$ curl <https://github.com/WuraLab/NigeriaApi/blob/sqlDump/output.sql> > outpput.sql
-$ createdb nigeriaapidb
-$ psql --dbname nigeriaapidb -f output.sql
-```
+## Set up the backend  locally
+
 
 The project uses environment variables for configuration, which starts with DEV_DATABASE_. To configure the connection to our database, we need to specify the DB name, user, password, and host. In the root project folder create a file called ```.env``` and fill it with the content in the ```.env.example``` file:
+```
+SECRET_KEY=_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707uo)oclh=jd
+RESETPASS_URL=localhost:3000
+DEBUG=false
+ALLOWED_HOSTS=localhost
 
-## Setting it up locally
+
+DATABASE_NAME=dnadb
+DATABASE_USER=postgresuser
+DATABASE_PASSWORD=postgresuser
+DATABASE_HOST=db
+DATABASE_ENGINE=django.db.backends.postgresql
+DATABASE_PORT=5432
+
+FACEBOOK_SOCIAL_CLIENT_ID=3296313279158218337
+FACEBOOK_SOCIAL_SECRET=f63d610c89cwe1317fdea68c13ebf493ce
+
+GOOGLE_SOCIAL_CLIENT_ID=45970062485da2-uf0jsku7r8e03mlu5oeahph3rqr0k1fj.apps.googleusercontent.com
+GOOGLE_SOCIAL_SECRET=tRfCB1Ay5W6D2cd1dadymSaBwxn
+
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_HOST_USER=debtapp@gmail.com
+EMAIL_HOST_PASSWORD=gfrxcvcawjggnnedcirz
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+```
 
 This method is suitable for anyone who wish to run the project locally without docker.
 
+
 To run this application locally on your PC, you should have the following installed
 
-1. [Node js](https://nodejs.org/en/)
-
+1. [Python](https://www.python.org/downloads/)
 2. [PostgreSql](https://www.postgresql.org/)
+3. [Pip3](https://pip.pypa.io/en/stable/installing/)
+4. [Pipenv](https://pypi.org/project/pipenv/)
 
 
-### Fork the Repo
+## Fork the Repo
 
-### Clone the repository 
+## Clone the repository 
+
+
+    git clone https://github.com/WuraLab/DNA_backend.git
+
+
+## Create and Activate Virtual Environement
+
+Using Pipenv
+```
+   pipenv shell
+```
+
+## Install all dependencies
+
+Using pip3
+
+    pip3 install -U -r requirements.txt 
+
+## To start the App and run locally
+
+Using Python manage.py 
 
     ```
-    git clone https://github.com/<username>/NigeriaApi.git
-    ```
-
-
-
-### Install all dependencies
-
-Using npm
-
-    ```
-    npm install
-    ```
-
-
-### To start the App and run locally
-
-Using node
-
-    ```
-    npm start
+    python manage.py runserver
     ```    
-or nodemon(make sure you have nodemon installed on your local sysytem, perhaps installed globally using)
 
-    ```
-    npm install -g nodemon
-    ```    
-then you run the app with 
+To test the application, open your browser and type this in the Url address bar
+```localhost:8000```
 
-    ```
-    npm run dev
-    ```    
-By default, the applictaion is running on PORT 3000, this port can be changed in ```api/bin/www``` file on line 8.
-
-To test the application, open you browser and type this in the address bar
-```localhost:3000```
-
-### Setting it using docker-compose
+## Setting it using docker-compose
 The application can be run using docker also, you should the following installed
 
 1. [docker](https://www.docker.com/get-started)
@@ -114,33 +127,30 @@ The application can be run using docker also, you should the following installed
 run ```docker-compose build .``` to build the docker file.
 run ```docker-compose up -d``` to run the application
 
-Application runs on port 3000
+Application runs on port 8000
 
-## To see the application live
+## Download the mobile client to see the application 
 
-[https://nigeria-api.netlify.app/](https://nigeria-api.netlify.app/)
+[Download the Personal Loan Tracker App]()
 
 
 # Stack
-JavaScript 
+Python/Django + PostgreSQLDB
 
-## Community
+# Community
 
 If you have any questions or need help send a DM on  <a href="https://twitter.com/" alt="Twitter"><img src="https://raw.githubusercontent.com/WuraLab/NigeriaApi/sqlDump/readme/twitter-fill.svg"></a>to any of the amazing developers.
 
-- [Fawas](https://www.twitter.com/fawas_ola)
-- [Isreal](https://twitter.com/Aminu_Israelb)
-- [Suen](https://twitter.com/Eazyjazz02)
-- [Adefemi](https://www.twitter.com/daycrawller)
+- [Peterson Oaikhenah](https://www.twitter.com/i_am_nextwebb)
+- [Azeez Lukman](https://twitter.com/robogeek95)
+- [Emmanuel](https://twitter.com/)
 
 # Top-level directory layout
 
-    📦NigeriaAPI
+    📦DNA_backend
         ┗ 📦.github
             ┗ 📦workflows
                 ┣ 📜ci.yml
-        📦.vscode
-            ┣ 📜settings.json
         📦api
             ┗ 📦bin
                 ┣ 📜www
@@ -177,11 +187,11 @@ If you have any questions or need help send a DM on  <a href="https://twitter.co
         ┣ 📜README.md
 
 
-## Contributing
+# Contributing
 
 There are many ways you can contribute and help this project. Here a few ones:
 
 * Star this repo.
 * Upvote issues with 👍 reaction so we know what's the demand for particular issue to prioritize it within road map.
 * Create issues every time you feel something is missing or goes wrong.
-* Provide pull requests for all open issues and especially for those with [help wanted]() and [good first issue]() labels as those are out of Cube.js Core Team roadmap scope.
+* Provide pull requests for all open issues and especially for those with [help wanted]() and [good first issue]() labels.
