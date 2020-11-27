@@ -38,11 +38,11 @@ This app could be Used by Individulas and Agencies who want to track their loan 
 // Some Information
 
 ## Usage
-1. Set up the back-end
+Set up the back-end To make use of the API; 
 
-To make use of the API, There are two ways to set it up
-2. Setting it up locally 
-3. Setting it using docker-compose
+There are two ways to set it up
+- Setting it up locally 
+- Setting it using docker-compose
 
 
 
