@@ -153,40 +153,37 @@ If you have any questions or need help send a DM on  <a href="https://twitter.co
         ┗ 📦.github
             ┗ 📦workflows
                 ┣ 📜ci.yml
+        📦DNA
+            ┣ 📜__init__.py
+            ┣ 📜asgi.py
+            ┣ 📜settings.py
+            ┣ 📜urls.py
+            ┣ 📜wsgi.py
         📦api
-            ┗ 📦bin
-                ┣ 📜www
-            ┗ 📦config
-                ┣ 📜config.js
-            ┗ 📦controllers
-                ┗ 📦email
-                    ┗ 📦templates
-                        ┣ 📜signup.html
-                    ┣ 📜helper.js
-                ┣ 📜user.js
-            ┗ 📦helpers
-                ┣ 📜authHelper.js
-                ┣ 📜mailer.js
-                ┣ 📜validationSchema.js
-            ┗ 📦middlewares
-                ┣ 📜validationMid.js
             ┗ 📦migrations
-                ┣ 📜20200711012227-create-users.js
-            ┗ 📦models
-                ┣ 📜index.js
-                ┣ 📜users.js
-            ┗ 📦routes
-                ┣ 📜index.js
-            ┗ 📦test
-                ┣ 📜test.js
-        ┣ 📜app.js
+                ┣  📜__init__.py
+            ┣ 📜__init__.py
+            ┣ 📜admin.py
+            ┣ 📜apps.py
+            ┣ 📜models.py
+            ┣ 📜serializers.py
+            ┣ 📜tests.py
+            ┣ 📜urls.py
+            ┣ 📜views.py
+        📦templates
+            ┣ 📜password_reset_emai.html
+            ┣ 📜password_reset_emai.txt
+           
         ┣ 📜.env.example
-        ┣ 📜.eslintrc.js
         ┣ 📜.gitignore
-        ┣ 📜.sequelizerc
-        ┣ 📜package.json
-        ┣ 📜package-lock.json
+        ┣ 📜Dockerfile
+        ┣ 📜LICENSE
+        ┣ 📜Procfile
         ┣ 📜README.md
+        ┣ 📜docker-compose.yml
+        ┣ 📜manage.py
+        ┣ 📜requirements.txt
+
 
 
 ## Contributing
