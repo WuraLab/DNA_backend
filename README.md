@@ -127,7 +127,7 @@ The application can be run using docker also, you should the following installed
 2. [docker compose](https://docs.docker.com/compose/install/)
 
 - run ```docker-compose build ``` to build the docker image
-- run ```docker-compose up -d``` to run the application 
+- run ```docker-compose up -d``` to run the docker container
 
 Application runs on port 8000
 
