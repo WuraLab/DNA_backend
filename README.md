@@ -49,34 +49,7 @@ There are two ways to set it up
 ### Set up the back-end  locally
 
 
-The project uses environment variables for configuration, which starts with DEV_DATABASE_. To configure the connection to our database, we need to specify the DB name, user, password, and host. In the root project folder create a file called ```.env``` and fill it with the content in the ```.env.example``` file:
-```
-SECRET_KEY=_37@a5jgf3g)5+n4*5lg-0j8jr_sb7+w707uo)oclh=jd
-RESETPASS_URL=localhost:3000
-DEBUG=false
-ALLOWED_HOSTS=localhost
-
-
-DATABASE_NAME=dnadb
-DATABASE_USER=postgresuser
-DATABASE_PASSWORD=postgresuser
-DATABASE_HOST=db
-DATABASE_ENGINE=django.db.backends.postgresql
-DATABASE_PORT=5432
-
-FACEBOOK_SOCIAL_CLIENT_ID=3296313279158218337
-FACEBOOK_SOCIAL_SECRET=f63d610c89cwe1317fdea68c13ebf493ce
-
-GOOGLE_SOCIAL_CLIENT_ID=45970062485da2-uf0jsku7r8e03mlu5oeahph3rqr0k1fj.apps.googleusercontent.com
-GOOGLE_SOCIAL_SECRET=tRfCB1Ay5W6D2cd1dadymSaBwxn
-
-EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
-EMAIL_HOST=smtp.gmail.com
-EMAIL_HOST_USER=debtapp@gmail.com
-EMAIL_HOST_PASSWORD=gfrxcvcawjggnnedcirz
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-```
+The project uses environment variables for configuration, which starts with DEV_DATABASE_. To configure the connection to our database, we need to specify the DB name, user, password, and host. In the root project folder create a file called ```.env``` and fill it with the content in the ```.env.example``` file.
 
 This method is suitable for anyone who wish to run the project locally without docker.
 
