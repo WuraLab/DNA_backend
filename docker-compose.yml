@@ -19,14 +19,14 @@ services:
       # then send data to the main port open in the docker container, port 8000
     ports:
       - "8000:8000"
-  db:
+  db: 
     image: postgres
     restart: always
     environment:
-      - "POSTGRES_USER:${DATABASE_USER}"
-      - "POSTGRES_DB:${DATABASE_NAME}"
-      - "POSTGRES_PASSWORD:${DATABASE_PASSWORD}"
-      - "POSTGRES_HOST:${DATABASE_HOST}"
+      - POSTGRES_USER:${DATABASE_USER}
+      - POSTGRES_DB:${DATABASE_NAME}
+      - POSTGRES_PASSWORD:${DATABASE_PASSWORD}
+      - POSTGRES_HOST:${DATABASE_HOST}
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     ports:
