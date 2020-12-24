@@ -99,11 +99,15 @@ The application can be run using docker also, you should the following installed
 1. [docker](https://www.docker.com/get-started)
 2. [docker compose](https://docs.docker.com/compose/install/)
 
+
 - run ```docker-compose build ``` to build the docker image
 - run ```docker-compose up -d``` to run the docker container
 
 Application runs on port 8000
 
+```POSTGRES_HOST_AUTH_METHOD``` is set to ```trust``` to allow access to postgres port without a password.
+ Though not recommended; Can be replaced with ```docker run -e POSTGRES_PASSWORD=<your_password> ```
+ 
 ### Download the mobile client to see the application 
 
 [Download the Personal Loan Tracker App]()
